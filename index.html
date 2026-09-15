@@ -171,19 +171,9 @@
   if (!window.THREE) { document.getElementById('fallback').style.display='grid'; document.getElementById('scene').style.display='none'; return; }
 
   // ---------------- data ----------------
-  // The array order is the journey: the trail loop and the idle tour both follow it,
-  // from the first games, through Berkeley, research, and work, and back to games.
+  // The array order is the journey: the trail loop, the idle tour, and the legend all follow it.
   // lat/lon is the village crater; the building stands 12 degrees north of it, beside the pond.
   const SITES = [
-    { id:'workshop', label:'Games', name:'Games', lat:18, lon:0, color:0x8fd3ff,
-      entries:[
-        { title:'Waterworld', meta:'GameGala 2021 · First Place, G9-12',
-          body:'I made games in my free time from middle school through high school. Waterworld won First Place in the G9-12 division at GameGala 2021, a game-development competition.',
-          tags:['Game dev'] },
-        { title:'Murica', meta:'Godot · GDScript · solo',
-          body:'I set game dev aside in college and came back to it with Murica. I built it from scratch, alone, in Godot and GDScript. I own the gameplay code, systems, and mechanics.',
-          tags:['Godot','GDScript'], links:[{ href:'https://github.com/liangzachary/Murica', text:'GitHub' }] },
-      ], },
     { id:'berkeley', label:'UC Berkeley', name:'UC Berkeley', lat:-36, lon:36, color:0xffe08a,
       entries:[
         { title:'B.A. Economics & Data Science', meta:'Expected December 2027 · Berkeley, CA',
@@ -253,6 +243,15 @@
           body:'I contribute to LOCUS, a machine-readable corpus of US municipal and county ordinance codes across 9,239 cities and counties. I write Python for document ingestion, OCR, metadata extraction, deduplication, and data-quality checks over scanned legal documents. I build evaluation datasets and validate LLM outputs against the source ordinances. I run error analysis on retrieval and extraction failures.',
           tags:['Python','OCR','LLM evaluation','Data quality'] },
       ], },
+    { id:'workshop', label:'Games', name:'Games', lat:18, lon:0, color:0x8fd3ff,
+      entries:[
+        { title:'Waterworld', meta:'GameGala 2021 · First Place, G9-12',
+          body:'I made games in my free time from middle school through high school. Waterworld won First Place in the G9-12 division at GameGala 2021, a game-development competition.',
+          tags:['Game dev'] },
+        { title:'Murica', meta:'Godot · GDScript · solo',
+          body:'I set game dev aside in college and came back to it with Murica. I built it from scratch, alone, in Godot and GDScript. I own the gameplay code, systems, and mechanics.',
+          tags:['Godot','GDScript'], links:[{ href:'https://github.com/liangzachary/Murica', text:'GitHub' }] },
+      ], },
   ];
   const SITE_BY_ID = Object.fromEntries(SITES.map(s => [s.id, s]));
 
@@ -267,15 +266,27 @@
   const camDirTour = new THREE.Vector3(0, 0.45, 0.89).normalize(); // bird's eye for the idle tour
   const camDirSel  = new THREE.Vector3(0, 0.07, 1).normalize();    // front facing when a site is selected
   let camDist = 7.6, baseDist = 7.6, camDir = camDirTour.clone();
-  let aimDir = camDir.clone(); // where the focused spot on the surface should end up (tour: straight at the camera)
   const X_AXIS = new THREE.Vector3(1, 0, 0);
-  const selTilt = () => innerWidth <= 640 ? 0.3 : 0.5;   // a selected place sits below center so its buildings are seen at an angle
-  const selZoom = () => innerWidth <= 640 ? 0.85 : 0.8;
+  const CAM = {
+    fitRadius: 3.6,     // world radius that must fit the short side at the start: bigger = starts farther out
+    selTiltDesk: 0.35,  // a selected place sits a little below center so its buildings are seen at an angle
+    selTiltPhone: 0.3,
+    selZoomDesk: 1,     // no zoom on desktop when a place is picked
+    selZoomPhone: 0.8,  // phones start far out, so pull in a bit to show the buildings above the sheet
+    panelGap: 170,      // px kept between a selected place and the panel's left edge on desktop
+    tourTilt: 0.3,      // the walk looks at the trail a little from the side, not straight down
+  };
+  const isPhone = () => innerWidth <= 640;
+  const selTilt = () => isPhone() ? CAM.selTiltPhone : CAM.selTiltDesk;
+  const selZoom = () => isPhone() ? CAM.selZoomPhone : CAM.selZoomDesk;
+  const tourAim = () => camDirTour.clone().applyAxisAngle(X_AXIS, CAM.tourTilt);
+  let aimDir = tourAim(); // where the focused spot on the surface should end up
   camera.position.copy(camDir.clone().multiplyScalar(camDist));
   camera.lookAt(0, 0, 0);
   // zoom bounds adapt to the viewport: phones need to start farther out to fit the whole planet
-  let MIN_D = 4.8, MAX_D = 10.5, userZoomed = false;
-  const fitDistance = () => { const t = Math.tan(20 * Math.PI / 180); const halfTan = Math.min(t, t * camera.aspect); return (2 * 1.42) / halfTan; };
+  let MIN_D = 4.8, MAX_D = 12, userZoomed = false;
+  const TAN_V = Math.tan(20 * Math.PI / 180);
+  const fitDistance = () => CAM.fitRadius / Math.min(TAN_V, TAN_V * camera.aspect);
 
   // pixel-art lighting with enough sun to give terrain relief and color depth
   scene.add(new THREE.AmbientLight(0x9aa6c2, 0.5));
@@ -928,7 +939,7 @@
     });
   } catch (e) { console.error('paths failed, continuing without them:', e); }
 
-  world.quaternion.setFromUnitVectors(lmDirs[0], camDirTour); // open on the first stop
+  world.quaternion.setFromUnitVectors(lmDirs[0], aimDir); // open on the first stop
 
   // ---- geysers (rock mound + pulsing water column) ----
   const geysers = [];
@@ -983,7 +994,8 @@
     AXIS_TMP2.setFromMatrixColumn(camera.matrixWorld, 0).normalize(); // screen right
     world.quaternion.premultiply(Q_TMP.setFromAxisAngle(AXIS_TMP2, dy));
   };
-  const beginDrag = (x, y) => { dragging = true; flyDir = null; angVel.x = 0; angVel.y = 0; lastActivity = nowT; if (mode === 'tour') tourWaitUntil = nowT + 6; px = x; py = y; };
+  let downX = 0, downY = 0;
+  const beginDrag = (x, y) => { downX = x; downY = y; dragging = true; flyDir = null; angVel.x = 0; angVel.y = 0; lastActivity = nowT; if (mode === 'tour') tourWaitUntil = nowT + 6; px = x; py = y; };
   const moveDrag = (x, y) => {
     const dx = (x - px) * 0.0045, dy = (y - py) * 0.0035;
     screenSpin(dx, dy);
@@ -1098,7 +1110,11 @@
     revealLegend(s.id);
     if (opts.focus) h2.focus({ preventScroll: true });
   };
-  canvas.addEventListener('click', e => { const g = pick(e.clientX, e.clientY); if (g) openSite(g.userData.site); });
+  canvas.addEventListener('click', e => {
+    if (Math.hypot(e.clientX - downX, e.clientY - downY) > 6) return; // the end of a drag is not a click
+    const g = pick(e.clientX, e.clientY);
+    if (g) openSite(g.userData.site);
+  });
   const closePanel = () => {
     const wasFocused = panel.contains(document.activeElement);
     panel.classList.remove('show');
@@ -1107,7 +1123,7 @@
     selRing.visible = false;
     mode = 'tour';
     camDir = camDirTour.clone();
-    aimDir = camDir.clone();
+    aimDir = tourAim();
     if (!userZoomed) camDist = baseDist;
     tourWaitUntil = nowT + 2;
     if (current) { walkLeg = SITES.indexOf(current); walkU = 0; } // pick the story up from the place you just read
@@ -1146,11 +1162,7 @@
     P.lights.forEach((L, j) => L.material.color.setHex(j + 1 === k && local > out - 0.05 && local < out + 0.7 ? 0xffe08a : (j + 1 < k ? 0xa0524a : 0x6b3b35)));
   };
   const lookAt = new THREE.Vector3(), lookGoal = new THREE.Vector3();
-  const siteLookY = () => { // height where the camera-to-place line crosses z = 0: looking there centers the place
-    const cy = camDir.y * camDist, cz = camDir.z * camDist, sy = aimDir.y * R * 1.02, sz = aimDir.z * R * 1.02;
-    return cy + (sy - cy) * (cz / Math.max(0.1, cz - sz));
-  };
-  const hudEl = document.getElementById('hud');
+  const hudEl = document.getElementById('hud'), bottomUI = document.getElementById('bottomui');
 
   // ---------------- loop ----------------
   const clock = new THREE.Clock();
@@ -1158,16 +1170,18 @@
     const px = Math.max(1, Math.min(PIXEL, innerWidth / 240));
     renderer.setSize(Math.floor(innerWidth/px), Math.floor(innerHeight/px), false);
     camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
-    MAX_D = Math.max(10.5, fitDistance() * 1.2);
-    baseDist = Math.min(MAX_D, Math.max(7.6, fitDistance())); // phones start with the whole planet in frame
+    MAX_D = Math.max(12, fitDistance() * 1.3);
+    baseDist = Math.min(MAX_D, Math.max(7.6, fitDistance())); // the whole planet fits between the header and the place buttons
     if (!userZoomed) camDist = baseDist * (mode === 'selected' ? selZoom() : 1);
     if (mode === 'selected') aimDir = camDirSel.clone().applyAxisAngle(X_AXIS, selTilt());
   };
   addEventListener('resize', resize); resize();
+  camera.position.copy(camDir).multiplyScalar(camDist); // start at the fitted distance, no zoom-out on load
   (function tick(){
     requestAnimationFrame(tick);
     const t = clock.getElapsedTime();
     const dt = Math.min(t - prevT, 0.1); prevT = t; nowT = t;
+    const ease = (rate) => 1 - Math.pow(1 - rate, dt * 60); // same feel at 30, 60, or 144 fps
     if (mode === 'tour' && flyDir === null && !dragging && t > tourWaitUntil) {
       // walk the trail: follow the drawn path centerline between this leg's landmarks
       if (announcedLeg !== walkLeg) {
@@ -1182,42 +1196,42 @@
       const u = Math.min(walkU, 1);
       if (walkU < 1) {
         const f = pathPointDir(lmDirs[e[0]], lmDirs[e[1]], walkLeg, u);
-        aimAt(f, 0.12);
+        aimAt(f, ease(0.12));
       } else {
         // arrived at the leg's end: keep aiming until the landmark is truly centered, THEN linger
         const endDir = lmDirs[route[walkLeg + 1]];
-        aimAt(endDir, 0.12);
+        aimAt(endDir, ease(0.12));
         const cur = endDir.clone().applyQuaternion(world.quaternion).normalize();
         if (cur.angleTo(aimDir) < 0.05) { walkU = 0; walkLeg = (walkLeg + 1) % (route.length - 1); tourWaitUntil = t + 2.5; }
       }
     }
     if (flyDir !== null) {
-      aimAt(flyDir, 0.08);
+      aimAt(flyDir, ease(0.07));
       const cur = flyDir.clone().applyQuaternion(world.quaternion).normalize();
       if (cur.angleTo(aimDir) < 0.02) flyDir = null;
     }
     if (!dragging && (Math.abs(angVel.x) > 1e-5 || Math.abs(angVel.y) > 1e-5)) {
-      screenSpin(angVel.y, angVel.x); // inertia in screen space
-      angVel.x *= 0.94; angVel.y *= 0.94;
+      screenSpin(angVel.y * dt * 60, angVel.x * dt * 60); // inertia in screen space
+      const decay = Math.pow(0.94, dt * 60);
+      angVel.x *= decay; angVel.y *= decay;
     }
-    if (mode === 'selected' && t - lastActivity > 25) closePanel(); // idle: return to the tour
     const shootP = (t * 0.09) % 1;
     if (shootP < 0.06) { const q = shootP / 0.06; shoot.visible = true; shoot.position.set(-14 + q * 24, 9 - q * 5, -12); shoot.rotation.z = -0.2; shoot.material.opacity = 0.9 * (1 - q); }
     else shoot.visible = false;
-    camera.position.lerp(camDir.clone().multiplyScalar(camDist), 0.06);
-    // keep the focused place clear of the panel: aim past the planet center
-    lookGoal.set(0, 0, 0);
-    if (panel.classList.contains('show')) {
-      const tanV = Math.tan(20 * Math.PI / 180);
-      if (innerWidth <= 640) {
-        const top = hudEl.offsetHeight, bottom = innerHeight - panel.offsetHeight - 12;
-        lookGoal.y = siteLookY() + (((top + bottom) / 2 - innerHeight / 2) / (innerHeight / 2)) * camDist * tanV;
-      } else {
-        lookGoal.x = ((panel.offsetWidth + 24) / innerWidth) * camDist * tanV * camera.aspect;
-        lookGoal.y = siteLookY();
-      }
+    camera.position.lerp(camDir.clone().multiplyScalar(camDist), ease(0.06));
+    // framing: center the planet in the free space between the header and the place buttons
+    const pxToWorld = camDist * TAN_V / (innerHeight / 2);
+    const panelOpen = panel.classList.contains('show');
+    const top = hudEl.getBoundingClientRect().bottom;
+    const bottom = panelOpen && isPhone() ? panel.getBoundingClientRect().top : bottomUI.getBoundingClientRect().top;
+    lookGoal.set(0, ((top + bottom) / 2 - innerHeight / 2) * pxToWorld, 0);
+    if (panelOpen && isPhone()) lookGoal.y += aimDir.y * R * 0.85;  // phones: the picked place sits in the strip above the sheet
+    if (panelOpen && !isPhone()) {                                  // desktop: nudge left only when the panel would crowd the place
+      const panelLeft = panel.getBoundingClientRect().left;
+      const shift = Math.max(0, innerWidth / 2 - (panelLeft - CAM.panelGap));
+      lookGoal.x = shift * pxToWorld;
     }
-    lookAt.lerp(lookGoal, 0.08);
+    lookAt.lerp(lookGoal, ease(0.08));
     camera.lookAt(lookAt);
     if (hoverDirty) { // raycast at most once per frame
       hoverDirty = false;
