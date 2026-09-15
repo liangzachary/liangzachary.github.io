@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zachary Liang · World</title>
-<meta name="description" content="A small forested world. Each landmark is something I built.">
+<meta name="description" content="Zachary Liang. UC Berkeley Economics &amp; Data Science, expected December 2027. I build data-heavy products and the tooling around them.">
 <link rel="canonical" href="https://liangzachary.github.io/">
 <meta property="og:title" content="Zachary Liang">
-<meta property="og:description" content="A small forested world. Each landmark is something I built. UC Berkeley Economics &amp; Data Science, class of 2027.">
+<meta property="og:description" content="A small world you can spin. Each place holds one part of the story. UC Berkeley Economics &amp; Data Science, expected December 2027.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://liangzachary.github.io/">
 <meta name="twitter:card" content="summary">
@@ -29,10 +29,11 @@
               background:radial-gradient(75% 75% at 50% 48%, transparent 62%, rgba(2,4,9,.42) 100%); }
   #scene { position:fixed; inset:0; display:block; width:100%; height:100%; image-rendering: pixelated; image-rendering: crisp-edges; touch-action:none; }
 
-  #hud { position:fixed; top:0; left:0; right:0; padding:26px 30px; display:flex; justify-content:space-between; align-items:baseline; pointer-events:none; z-index:5; }
+  #hud { position:fixed; top:0; left:0; right:0; padding:calc(26px + env(safe-area-inset-top, 0px)) 30px 26px; display:flex; justify-content:space-between; align-items:baseline; pointer-events:none; z-index:5; }
   #hud h1 { font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; font-size:22px; font-weight:600; letter-spacing:.02em; }
+  #hud h1, #hud .sub, #caption, #credit { text-shadow:0 1px 3px rgba(2,4,9,.9), 0 0 12px rgba(2,4,9,.6); }
   #hud .hint { font-size:13px; color:var(--muted); margin-right:6px; }
-  #hud > div:last-child { text-align:right; line-height:2.4; max-width:62%; }
+  #hud nav { text-align:right; line-height:2.4; max-width:62%; }
   #hud a { pointer-events:auto; color:var(--muted); text-decoration:none; font-size:13px; margin-left:8px;
            border:1px solid rgba(255,181,112,.28); border-radius:999px; padding:5px 13px; background:rgba(19,14,8,.65); transition:all .15s; }
   #hud a:hover { color:var(--ink); border-color:var(--accent); }
@@ -40,32 +41,55 @@
   #hud a.primary { background:var(--accent); color:#221306; border-color:var(--accent); font-weight:650; }
   #hud a.primary:hover { background:#ffc78f; color:#221306; }
   #hud .sub { font-size:13.5px; color:var(--muted); margin-top:4px; max-width:46ch; font-family:var(--serif); font-style:italic; }
+  #hud .sub span { display:block; }
 
   #panel {
     position:fixed; right:24px; top:50%; transform:translateY(-50%) translateX(24px);
     width:min(360px, calc(100vw - 48px)); background:var(--panelbg);
     border:1px solid rgba(255,181,112,.3); border-radius:16px; padding:24px;
-    max-height:min(70vh, 560px); overflow-y:auto;
+    max-height:min(76vh, 640px, calc(100vh - 230px)); overflow-y:auto; overscroll-behavior:contain;
     opacity:0; visibility:hidden; pointer-events:none; transition:opacity .25s, transform .25s, visibility .25s; z-index:6;
   }
-  #panel.show { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(-50%) translateX(0); backdrop-filter:blur(10px); }
+  #panel.show { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(-50%) translateX(0); backdrop-filter:blur(10px); transition:opacity .25s, transform .25s, visibility 0s; }
+  #panel .stop { font-size:11.5px; color:var(--muted); letter-spacing:.06em; margin-bottom:4px; font-variant-numeric:tabular-nums; }
   #panel .where { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:650; font-family:var(--serif); }
   #panel h2 { font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; font-size:21px; font-weight:600; margin:6px 0 10px; }
+  #panel h2:focus { outline:none; }
   #panel p { font-size:14.5px; color:var(--muted); line-height:1.6; font-family:var(--serif); }
+  #panel .entry + .entry { margin-top:16px; padding-top:14px; border-top:1px dashed rgba(255,181,112,.22); }
+  #panel h3 { font-family:var(--serif); font-size:16px; font-weight:600; color:var(--ink); line-height:1.35; }
+  #panel .meta { font-size:12px; color:var(--accent); opacity:.85; margin:2px 0 6px; font-family:var(--serif); font-style:italic; }
+  #panel .rows { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-family:var(--serif); font-size:13.5px; line-height:1.45; }
+  #panel .rows dt { color:var(--accent); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; padding-top:2px; white-space:nowrap; }
+  #panel .rows dd { color:var(--muted); }
+  #panel .golinks { display:flex; flex-wrap:wrap; gap:4px 16px; }
+  #panel .threads { margin-top:18px; padding-top:12px; border-top:1px solid rgba(255,181,112,.22); }
+  #panel .label { font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:6px; }
+  #panel .threads ul { list-style:none; }
+  #panel .threads li + li { margin-top:6px; }
+  #panel .thread { display:block; width:100%; text-align:left; background:none; border:none; padding:4px 0; cursor:pointer; font-family:var(--serif); font-size:13.5px; color:var(--muted); line-height:1.45; }
+  #panel .thread b { color:var(--ink); font-weight:600; }
+  #panel .thread b::after { content:" \2192"; color:var(--accent); }
+  #panel .thread:hover b { color:var(--accent); }
+  #panel .trail { position:sticky; bottom:-24px; display:flex; justify-content:space-between; gap:10px; margin:16px -24px -24px; padding:14px 24px 16px; background:linear-gradient(rgba(19,14,8,0), rgb(19,14,8) 12px); }
+  #panel .trail button { flex:1 1 0; min-width:0; background:#2a1f13; border:1px solid rgba(255,181,112,.3); color:var(--ink); border-radius:10px; padding:8px 10px; font-family:var(--serif); font-size:13px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #panel .trail button.next { text-align:right; }
+  #panel .trail button.prev { text-align:left; }
+  #panel .trail button:hover { border-color:var(--accent); }
+  #panel .thread:focus-visible, #panel .trail button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
   #panel .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
   #panel .tag { font-size:11.5px; color:var(--accent); border:1px solid rgba(255,181,112,.4); padding:2px 9px; border-radius:999px; }
   #panel a.go { display:inline-block; margin-top:14px; color:var(--accent); font-size:13.5px; font-weight:600; text-decoration:none; }
-  #panel .close { position:absolute; top:4px; right:4px; width:44px; height:44px; display:grid; place-items:center; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; border-radius:10px; }
+  #panel .close { position:absolute; top:2px; right:2px; width:44px; height:44px; display:grid; place-items:center; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; border-radius:10px; }
   #panel .close:hover { color:var(--ink); }
   #panel .close:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
 
   #tip { position:fixed; padding:5px 12px; background:var(--panelbg); border:1px solid rgba(255,181,112,.35); border-radius:8px; font-size:13px; font-family:var(--serif); pointer-events:none; opacity:0; transform:scale(.96); transition:opacity .12s, transform .12s; z-index:7; white-space:nowrap; }
   #tip.on { opacity:1; transform:scale(1); }
 
-  #legend { display:grid; grid-template-columns:repeat(6, auto); gap:8px; justify-content:center; }
-  @media (max-width: 980px) { #legend { grid-template-columns:repeat(3, auto); } }
+  #legend { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:100%; }
   #legend button {
-    background:rgba(19,14,8,.82); border:1px solid rgba(255,181,112,.3); color:var(--muted);
+    white-space:nowrap; background:rgba(19,14,8,.82); border:1px solid rgba(255,181,112,.3); color:var(--muted);
     border-radius:999px; padding:7px 16px; font-size:13px; font-family:var(--serif); cursor:pointer; transition:all .15s, transform .15s;
   }
   #legend button:hover { transform:translateY(-1px); }
@@ -79,23 +103,33 @@
   #panel a.cv:hover { color:var(--accent); }
   #panel a.cv:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
 
-  #bottomui { position:fixed; bottom:calc(22px + env(safe-area-inset-bottom, 0px)); left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:10px; z-index:5; max-width:94vw; }
+  #bottomui { position:fixed; bottom:calc(22px + env(safe-area-inset-bottom, 0px)); left:50%; transform:translateX(-50%); width:min(1040px, 94vw); display:flex; flex-direction:column; align-items:center; gap:10px; z-index:5; transition:opacity .25s; pointer-events:none; }
+  #bottomui > * { pointer-events:auto; }
   #credit { font-family:var(--serif); font-style:italic; font-size:11px; color:var(--muted); opacity:.75; }
   #credit a { color:var(--muted); pointer-events:auto; text-decoration:underline dotted; }
   #credit a:hover { color:var(--ink); }
   #caption { color:var(--muted); font-size:14px; font-style:italic; letter-spacing:.03em; min-height:18px; pointer-events:none; transition:opacity .4s; font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; }
 
   @media (max-width: 640px) {
-    #hud { padding:14px 12px; }
-    #hud h1 { font-size:16px; }
-    #hud .sub { font-size:11px; max-width:34ch; }
-    #hud > div:last-child { line-height:2.1; max-width:56%; }
-    #hud a { font-size:11px; padding:4px 9px; margin-left:5px; }
-    #legend { gap:6px; }
-    #legend button { padding:5px 10px; font-size:11px; }
+    #hud { flex-direction:column; align-items:stretch; gap:8px; padding:calc(12px + env(safe-area-inset-top, 0px)) 0 0; }
+    #hud > div:first-child { padding:0 16px; }
+    #hud h1 { font-size:17px; }
+    #hud .sub { font-size:11.5px; max-width:none; margin-top:2px; }
+    #hud nav { max-width:none; text-align:left; line-height:1; display:flex; gap:6px; overflow-x:auto; padding:2px 16px 4px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #hud nav::-webkit-scrollbar { display:none; }
+    #hud a { flex:none; font-size:11.5px; padding:5px 10px; margin-left:0; }
+    #bottomui { left:0; right:0; width:auto; transform:none; gap:8px; }
+    #legend { flex-wrap:nowrap; justify-content:flex-start; max-width:100vw; overflow-x:auto; gap:6px; padding:2px 16px 4px; scroll-snap-type:x proximity; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #legend::-webkit-scrollbar { display:none; }
+    #legend button { flex:none; padding:6px 11px; font-size:12px; scroll-snap-align:center; }
     #legend button .dot { width:6px; height:6px; margin-right:5px; }
-    #caption { font-size:12px; }
-    #credit { font-size:10px; }
+    #caption { font-size:12px; padding:0 16px; text-align:center; }
+    #credit { font-size:10px; padding:0 16px; text-align:center; }
+    #panel { left:12px; right:12px; top:auto; width:auto; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); max-height:56vh; padding:20px 18px 18px; transform:translateY(24px); }
+    #panel.show { transform:translateY(0); }
+    #panel h2 { font-size:19px; }
+    #panel .trail { bottom:-18px; margin:14px -18px -18px; padding:10px 18px 14px; }
+    body.panel-open #bottomui { opacity:0; pointer-events:none; }
   }
 
   #fallback { position:fixed; inset:0; display:none; place-items:center; text-align:center; padding:30px; }
@@ -114,36 +148,37 @@
 <div id="hud">
   <div>
     <h1>Zachary Liang</h1>
-    <div class="sub">Data Science &amp; Economics @ UC Berkeley '27 · builds AI-native products &amp; NLP pipelines</div>
+    <div class="sub"><span>UC Berkeley · Economics &amp; Data Science · Dec 2027</span> <span>I build data-heavy products and the tooling around them.</span></div>
   </div>
-  <div>
+  <nav aria-label="Links">
     <a class="primary" href="./Zachary_Liang_Resume.pdf">Resume (PDF)</a>
     <a href="./text.html">Text Version</a>
     <a href="https://github.com/liangzachary">GitHub</a>
     <a href="https://www.linkedin.com/in/zachary-liang/">LinkedIn</a>
-    <a href="mailto:liangzachary20@gmail.com">Email Me</a>
-  </div>
+    <a href="mailto:liangzachary20@gmail.com">Email</a>
+  </nav>
 </div>
 
-<div id="panel" role="complementary" aria-label="Landmark details">
-  <button class="close" aria-label="Close">×</button>
+<div id="panel" role="region" aria-label="Place details">
+  <button class="close" type="button" aria-label="Close">×</button>
+  <div class="stop"></div>
   <div class="where"></div>
-  <h2></h2>
-  <p></p>
-  <div class="tags"></div>
-  <a class="go" target="_blank" rel="noopener"></a>
-  <a class="cv" href="./Zachary_Liang_Resume.pdf">Take my resume with you ↓</a>
+  <h2 tabindex="-1"></h2>
+  <div class="entries"></div>
+  <div class="threads"><div class="label">Connected places</div><ul></ul></div>
+  <a class="cv" href="./Zachary_Liang_Resume.pdf">Resume (PDF) →</a>
+  <div class="trail"><button class="prev" type="button"></button><button class="next" type="button"></button></div>
 </div>
 
 <div id="tip"></div>
 <div id="bottomui">
-  <div id="caption" aria-live="polite"></div>
+  <div id="caption"></div>
   <div id="legend"></div>
   <div id="credit">World inspired by <a href="https://www.mobiusdigitalgames.com/outer-wilds.html" target="_blank" rel="noopener">Outer Wilds</a>, rebuilt from scratch</div>
 </div>
 
 <div id="fallback">
-  <p>Motion is reduced on this device.<br>The full story lives on the <a href="./text.html">flat version</a>.</p>
+  <p>The 3D view is off on this device.<br>Everything is on the <a href="./text.html">text version</a>.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -152,26 +187,131 @@
   if (!window.THREE) { document.getElementById('fallback').style.display='grid'; document.getElementById('scene').style.display='none'; return; }
 
   // ---------------- data ----------------
+  // The array order is the journey: the trail loop and the idle tour both follow it,
+  // from the first games, through Berkeley, research, and work, and back to games.
+  // lat/lon is the village crater; the building stands 12 degrees north of it, beside the pond.
   const SITES = [
-    { id:'liminal',  name:'Liminal Machines',      where:'The Foundry Camp',    lat:45,  lon:-15,  color:0xffb570,
-      desc:'Design Engineering Intern, Liminal Machines (Jun-Aug 2026). Prototyping product directions for Limion, an AI tool that organizes team prototyping around open questions. Shipped v2 of the onboarding guide prototype, published through the product\'s own MCP pipeline; authored a file-and-line architecture audit of the board AI agent (FastAPI service, WebSocket intent channel, ~28 tools) that scoped the agent-workflow redesign. Daily stack: Claude Code and MCP servers.',
-      tags:['Claude Code','MCP','Prototyping'], link:'' },
-    { id:'berkeley', name:'UC Berkeley',           where:'The Campanile',       lat:-10, lon:60,   color:0xffe08a,
-      desc:'B.A. Economics & Data Science, UC Berkeley, Class of 2027. Coursework: data structures, computer graphics, computer networking, econometrics, linear algebra, probability and statistics, microeconomic and macroeconomic theory. The pairing is deliberate: production engineering plus the economic reasoning to know what\'s worth building.',
-      tags:['Economics','Data Science'], link:'' },
-    { id:'fed',      name:'Fed NLP Research',      where:'The Archive',         lat:-45, lon:130,  color:0xa1e3b6,
-      desc:'Research Assistant, UC Berkeley Economics (Jan-Dec 2025). Built an NLP classification pipeline over 10,000+ finance articles studying the Fed\'s use of moral suasion: OpenAI API batch runs with reproducible prompts, benchmarked against human-coded labels for precision and recall. Co-wrote the methods section covering pipeline design and audit trails for downstream policy analysis.',
-      tags:['Python','OpenAI API','NLP'], link:'' },
-    { id:'chatchw',  name:'ChatCHW · Berkeley Haas', where:'The Healers\' Hut', lat:50,  lon:155,  color:0xff9d9d,
-      desc:'Research Assistant, Berkeley Haas, ChatCHW project (Aug 2025-Aug 2026). Building LLM/NLP pipelines that convert clinical manuals into DMN decision tables for community health workers: parsing, chunking, prompt templates, rule extraction, versioned provenance. Shipped the evaluation and delivery layer: synthetic-case evals, end-to-end tests against source text, and a retrieval-augmented query system with guardrails and logging.',
-      tags:['LLM pipelines','DMN','RAG'], link:'' },
-    { id:'spatch',   name:'Spatch',                where:'The Cookfire Isles',  lat:-35, lon:-110, color:0xd7b3ff,
-      desc:'Full-stack cooking-education platform, European Innovation Academy (Porto, Jul 2025-present). React + Tailwind frontend on a FastAPI + SQLModel backend: auth, recipe CRUD, progress tracking, image upload. Led student usability tests and converted findings into short iteration cycles.',
-      tags:['React','FastAPI','SQLModel'], link:'https://github.com/liangzachary/pantrypal-backend' },
-    { id:'millpond', name:'Mill Pond Research',    where:'The Mill Pond',       lat:5,   lon:-70,  color:0x9ff2ff,
-      desc:'Frontend Engineer, Mill Pond Research (Sep 2025-Jan 2026). Designed and shipped the company website end to end, from Figma wireframes to a responsive, component-based React + Tailwind site in production.',
-      tags:['Figma','React','Tailwind'], link:'https://www.millpondresearch.com/' },
+    { id:'workshop', label:'Games', name:'Games', where:'The Workshop', when:'Waterworld, then Murica', lat:18, lon:0, color:0x8fd3ff,
+      entries:[
+        { title:'Waterworld', meta:'GameGala 2021 · First Place, G9-12 division',
+          body:'I made games in my free time from middle school through high school. Waterworld won First Place in the G9-12 division at GameGala 2021, a game-development competition.',
+          tags:['Game dev'] },
+        { title:'Murica', meta:'Godot · GDScript · solo',
+          body:'I set game dev aside in college and came back to it with Murica. I built it from scratch, alone, in Godot and GDScript. I own the gameplay code, systems, and mechanics.',
+          tags:['Godot','GDScript'], links:[{ href:'https://github.com/liangzachary/Murica', text:'GitHub →' }] },
+      ],
+      threads:[
+        { to:'lighthouse', note:'More C++ work, on rendering.' },
+        { to:'berkeley', note:'Where the games went on hold.' },
+      ] },
+    { id:'berkeley', label:'UC Berkeley', name:'UC Berkeley', where:'The Campanile', when:'Expected December 2027', lat:-36, lon:36, color:0xffe08a,
+      entries:[
+        { title:'B.A. Economics & Data Science', meta:'Expected December 2027 · Berkeley, CA',
+          body:'Coursework: Econometrics, Public Economics, Probability and Statistics, Linear Algebra, Microeconomic and Macroeconomic Theory, Data Science (Data 100), Data Structures (CS 61B), Computer Graphics (CS 184), and Computer Networking (CS 168).',
+          tags:['Economics','Data Science'] },
+        { title:'Skills', rows:[
+            ['Programming', 'Python, C++, R, SQL, Java, TypeScript, GDScript'],
+            ['Data / ML', 'pandas, NumPy, scikit-learn, LLMs and the OpenAI API, prompt engineering, statistical analysis'],
+            ['Web', 'React, Tailwind, FastAPI, Node.js'],
+            ['Graphics', 'Physically-based rendering, ray and path tracing, rasterization'],
+            ['Tools', 'Git, Claude Code, MCP, PostgreSQL, MySQL, Excel VBA, LaTeX'],
+            ['Languages', 'English and Mandarin, both fluent'],
+          ] },
+        { title:'Open to internships', meta:'Fall 2026 · Spring 2027 · Summer 2027',
+          body:'Internships in AI/ML, data science, and data engineering.',
+          links:[{ href:'mailto:liangzachary20@gmail.com', text:'liangzachary20@gmail.com →' }] },
+      ],
+      threads:[
+        { to:'fed', note:'Research in the Economics Department.' },
+        { to:'relay', note:'CS 168 project.' },
+        { to:'lighthouse', note:'CS 184 projects.' },
+      ] },
+    { id:'fed', label:'Economics Research', name:'Economics Research', where:'The Archive', when:'2025', lat:20, lon:72, color:0xa1e3b6,
+      entries:[
+        { title:'Research Assistant, UC Berkeley Economics', meta:'Dr. Emily Martell · Jan 2025 to Dec 2025',
+          body:'I measured moral suasion by the Federal Reserve, FDIC, and OCC across tens of thousands of American Banker articles. I built an LLM classification pipeline on the OpenAI API with versioned, agency-specific prompts. I validated labels against a 500-article human-labeled set and used two independent runs per article as a consistency check. I built directional and non-directional moral suasion indices and wrote the methodology and results sections.',
+          tags:['Economics','OpenAI API','Validation'] },
+        { title:'American Banker News Corpus', meta:'Python · Selenium',
+          body:'The data behind the study. A Selenium pipeline collected 10,000+ articles with session persistence, rate limiting, and retries. I backfilled missing months by hand from NewsBank.',
+          tags:['Python','Selenium','Data engineering'] },
+      ],
+      threads:[
+        { to:'llo', note:'A new corpus: LLM outputs checked against source ordinances.' },
+        { to:'chatchw', note:'LLM pipelines on the OpenAI API, applied to clinical manuals.' },
+      ] },
+    { id:'spatch', label:'Spatch', name:'Spatch', where:'The Cookfire', when:'Porto', lat:-40, lon:108, color:0xd7b3ff,
+      entries:[
+        { title:'Spatch', meta:'European Innovation Academy · Porto',
+          body:'A full-stack cooking EdTech platform. The front end is React and Tailwind, and the back end is FastAPI and SQLModel. It has auth, recipe CRUD, progress tracking, and image upload. I ran usability tests with students and iterated on the results.',
+          tags:['React','Tailwind','FastAPI','SQLModel'],
+          links:[{ href:'https://github.com/liangzachary/pantrypal-backend', text:'Backend →' }, { href:'https://github.com/liangzachary/pantrypal-frontend', text:'Frontend →' }] },
+      ],
+      threads:[
+        { to:'millpond', note:'The same front-end stack, React and Tailwind.' },
+      ] },
+    { id:'chatchw', label:'ChatCHW', name:'ChatCHW', where:"The Healers' Hut", when:'Aug 2025 to Aug 2026', lat:12, lon:144, color:0xff9d9d,
+      entries:[
+        { title:'Research Assistant, Berkeley Haas', meta:'Prof. David Levine · Aug 2025 to Aug 2026',
+          body:'I built LLM pipelines on the OpenAI API that turn WHO clinical manuals into structured, versioned decision tables (DMN) and XLSForms for the Community Health Toolkit. I built evaluation and delivery tooling: synthetic test cases, end-to-end checks against source text, and a guarded retrieval-augmented query layer with logging.',
+          tags:['OpenAI API','DMN','XLSForm','RAG'] },
+      ],
+      threads:[
+        { to:'llo', note:'Model output checked against source text, this time on ordinances.' },
+        { to:'fed', note:'The earlier LLM pipeline, for economics.' },
+      ] },
+    { id:'millpond', label:'Mill Pond', name:'Mill Pond Research', where:'The Mill Pond', when:'Sep 2025 to Jan 2026', lat:-44, lon:180, color:0x9ff2ff,
+      entries:[
+        { title:'Frontend Engineer', meta:'Sep 2025 to Jan 2026',
+          body:'I designed and built the company website end to end. It went from Figma wireframes to a responsive, component-based React and Tailwind implementation.',
+          tags:['Figma','React','Tailwind'], links:[{ href:'https://www.millpondresearch.com/', text:'Live site →' }] },
+      ],
+      threads:[
+        { to:'liminal', note:'Front-end work, then design systems.' },
+        { to:'spatch', note:'The same stack, React and Tailwind, on Spatch.' },
+      ] },
+    { id:'liminal', label:'Liminal Machines', name:'Liminal Machines', where:'The Foundry Camp', when:'Jun 2026 to Aug 2026', lat:16, lon:-144, color:0xffb570,
+      entries:[
+        { title:'Design Engineering Intern, Limion', meta:'Liminal Machines, Inc. · Jun 2026 to Aug 2026',
+          body:'I built a custom ESLint plugin with AST rules that enforced the design system in code. I ran it live across the repo, with 255 findings and zero errors, and paired it with a Claude Code check. I made design-system fixes to typography, motion, and card tokens, with Storybook coverage. I audited the product\'s board AI agent (FastAPI, WebSocket intents, 28 tools) and its Storybook (267 stories) down to file-and-line citations. That audit set the scope for the agent-workflow redesign.',
+          tags:['ESLint','AST','Storybook','Claude Code'] },
+      ],
+      threads:[
+        { to:'millpond', note:'The React and Tailwind work before this.' },
+      ] },
+    { id:'relay', label:'Traceroute', name:'Traceroute', where:'The Relay Mast', when:'CS 168', lat:-34, lon:-108, color:0xff7a6b,
+      entries:[
+        { title:'Traceroute', meta:'Python · Computer Networking (CS 168)',
+          body:'I implemented traceroute in Python, starting from raw ICMP parsing.',
+          tags:['Python','ICMP','Networking'] },
+      ],
+      threads:[
+        { to:'berkeley', note:'Coursework.' },
+      ] },
+    { id:'lighthouse', label:'Graphics', name:'Computer Graphics', where:'The Lighthouse', when:'CS 184', lat:22, lon:-72, color:0x7fe0d4,
+      entries:[
+        { title:'Underwater Path Tracer', meta:'C++ · Computer Graphics (CS 184)',
+          body:'I extended a path tracer to render underwater scenes. I added a participating medium with Henyey-Greenstein volumetric scattering. I swept depth and water turbidity and validated attenuation against analytic single scattering.',
+          tags:['C++','Path tracing','Volumetric scattering'] },
+        { title:'Software Rasterizer', meta:'C++ · Computer Graphics (CS 184)',
+          body:'A software rasterizer with supersampling, 2D transforms, and half-edge mesh operations.',
+          tags:['C++','Rasterization','Half-edge meshes'] },
+      ],
+      threads:[
+        { to:'workshop', note:'The games, in Godot.' },
+        { to:'berkeley', note:'Coursework.' },
+      ] },
+    { id:'llo', label:'Local Laws Observatory', name:'Local Laws Observatory', where:'The Observatory', when:'Sep 2026 to present', lat:-38, lon:-36, color:0xc9b8ff,
+      entries:[
+        { title:'Research Assistant, UC Berkeley School of Information', meta:'Prof. Diag Davenport, Dr. Denis Peskoff · Sep 2026 to present',
+          body:'I contribute to LOCUS, a machine-readable corpus of US municipal and county ordinance codes across 9,239 cities and counties. I write Python for document ingestion, OCR, metadata extraction, deduplication, and data-quality checks over scanned legal documents. I build evaluation datasets and validate LLM outputs against the source ordinances. I run error analysis on retrieval and extraction failures.',
+          tags:['Python','OCR','LLM evaluation','Data quality'] },
+      ],
+      threads:[
+        { to:'fed', note:'An earlier corpus: American Banker articles.' },
+        { to:'chatchw', note:'Earlier evaluation against source text, on clinical manuals.' },
+      ] },
   ];
+  const SITE_BY_ID = Object.fromEntries(SITES.map(s => [s.id, s]));
 
   // ---------------- scene ----------------
   const canvas = document.getElementById('scene');
@@ -183,7 +323,11 @@
   const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
   const camDirTour = new THREE.Vector3(0, 0.45, 0.89).normalize(); // bird's eye for the idle tour
   const camDirSel  = new THREE.Vector3(0, 0.07, 1).normalize();    // front facing when a site is selected
-  let camDist = 7.6, camDir = camDirTour.clone();
+  let camDist = 7.6, baseDist = 7.6, camDir = camDirTour.clone();
+  let aimDir = camDir.clone(); // where the focused spot on the surface should end up (tour: straight at the camera)
+  const X_AXIS = new THREE.Vector3(1, 0, 0);
+  const selTilt = () => innerWidth <= 640 ? 0.3 : 0.5;   // a selected place sits below center so its buildings are seen at an angle
+  const selZoom = () => innerWidth <= 640 ? 0.85 : 0.8;
   camera.position.copy(camDir.clone().multiplyScalar(camDist));
   camera.lookAt(0, 0, 0);
   // zoom bounds adapt to the viewport: phones need to start farther out to fit the whole planet
@@ -207,9 +351,16 @@
   };
   // ---- crater terrain: features carve INTO the sphere, silhouette stays round ----
   // audited stats (8000-sample): water 9%, floors 17%, slopes 14%, plains 52%, rims 8%; radius 0.94R..1.01R
+  const siteDir = (s) => latLonDir(s.lat + 12, s.lon); // where the building stands
   const craters = [];
-  for (const s of SITES) craters.push({ dir: latLonDir(s.lat, s.lon), w: 0.15, depth: 0.95 });     // one village crater per landmark
-  for (let i = 0; i < 7; i++) craters.push({ dir:new THREE.Vector3(rand()*2-1, rand()*2-1, rand()*2-1).normalize(), w: 0.07 + rand()*0.08, depth: 0.55 + rand()*0.5 });
+  const VILLAGE_W = 0.12;
+  for (const s of SITES) craters.push({ dir: latLonDir(s.lat, s.lon), w: VILLAGE_W, depth: 0.95 }); // one village crater per place
+  let cGuard = 0;
+  while (craters.length < SITES.length + 6 && cGuard++ < 600) {                                      // wild craters, kept out of the villages
+    const d = new THREE.Vector3(rand()*2-1, rand()*2-1, rand()*2-1).normalize();
+    if (SITES.some(s => d.dot(siteDir(s)) > 0.66)) continue;
+    craters.push({ dir:d, w: 0.07 + rand()*0.07, depth: 0.55 + rand()*0.5 });
+  }
   const noiseB = [];
   for (let i = 0; i < 14; i++) noiseB.push({ dir:new THREE.Vector3(rand()*2-1, rand()*2-1, rand()*2-1).normalize(), amp:(rand()-0.5)*0.08, width:0.5+rand()*0.5 });
   const smooth01 = (x) => { x = Math.max(0, Math.min(1, x)); return x*x*(3-2*x); };
@@ -273,10 +424,46 @@
 
   const surfacePoint = (dir) => dir.clone().multiplyScalar(R * elevMult(elevOf(dir)));
 
-  // keep vegetation and stones out of the six landmark sites
-  const lmExcl = SITES.map(s => latLonDir(s.lat + 12, s.lon));
-  const NEAR_LM = Math.cos(0.28);
-  const nearLandmark = (dir) => lmExcl.some(d => dir.dot(d) > NEAR_LM);
+  // ---- the journey: one trail loop through every place, in story order ----
+  const N_SITES = SITES.length;
+  const lmDirs = SITES.map(siteDir);
+  const route = SITES.map((_, i) => i); route.push(0);                   // walk the array in order, then close the loop
+  const pathEdges = SITES.map((_, i) => [i, (i + 1) % N_SITES]);          // leg k runs from place k to place k+1
+  const slerpDir = (a, b, t) => {
+    const theta = Math.acos(Math.max(-1, Math.min(1, a.dot(b))));
+    if (theta < 1e-4) return a.clone();
+    const sT = Math.sin(theta);
+    return a.clone().multiplyScalar(Math.sin((1-t)*theta)/sT).add(b.clone().multiplyScalar(Math.sin(t*theta)/sT)).normalize();
+  };
+  const pathPointDir = (a, b, phase, t) => { // exact centerline of the drawn trail
+    let d = slerpDir(a, b, t);
+    const ahead = slerpDir(a, b, Math.min(1, t + 0.02));
+    const tangent = ahead.clone().sub(d);
+    let side = new THREE.Vector3(1, 0, 0);
+    if (tangent.lengthSq() > 1e-10) { const sd = d.clone().cross(tangent.normalize()); if (sd.lengthSq() > 1e-10) side = sd.normalize(); }
+    return d.clone().add(side.multiplyScalar(Math.sin(t * Math.PI * 3 + phase * 1.7) * 0.015)).normalize();
+  };
+  const trailPts = [];
+  pathEdges.forEach((e, k) => {
+    const a = lmDirs[e[0]], b = lmDirs[e[1]];
+    const n = Math.max(12, Math.round(Math.acos(Math.max(-1, Math.min(1, a.dot(b)))) * 40));
+    for (let j = 0; j <= n; j++) trailPts.push(pathPointDir(a, b, k, j / n));
+  });
+  const ON_TRAIL = Math.cos(0.05);
+  const onTrail = (dir) => { for (let k = 0; k < trailPts.length; k++) if (dir.dot(trailPts[k]) > ON_TRAIL) return true; return false; };
+  // which way each place's trails leave it, in the building's own frame (0 = its front, +z)
+  const tangentAt = (from, to) => to.clone().sub(from.clone().multiplyScalar(from.dot(to))).normalize();
+  const signedAngle = (u, v, axis) => Math.atan2(u.clone().cross(v).dot(axis), u.dot(v));
+  SITES.forEach((s, i) => {
+    const d = lmDirs[i];
+    s.inDir = tangentAt(d, lmDirs[(i - 1 + N_SITES) % N_SITES]);                      // the front faces the trail you arrive on
+    s.outAngle = signedAngle(s.inDir, tangentAt(d, lmDirs[(i + 1) % N_SITES]), d);   // the trail you leave on
+  });
+  const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+
+  // keep vegetation and stones out of the villages and off the trails
+  const NEAR_LM = Math.cos(0.30);
+  const nearLandmark = (dir) => lmDirs.some(d => dir.dot(d) > NEAR_LM) || onTrail(dir);
 
   // ---- pine forest (instanced, Timber Hearth vibe) ----
   const TREES = 300;
@@ -358,16 +545,179 @@
   } catch (e) { console.error('ground texture failed, continuing:', e); }
 
   // ---- landmarks: little handmade structures per experience ----
-  const latLon = (lat, lon) => {
-    const phi = (90 - lat) * Math.PI/180, theta = (lon + 180) * Math.PI/180;
-    return new THREE.Vector3(-Math.sin(phi)*Math.cos(theta), Math.cos(phi), Math.sin(phi)*Math.sin(theta));
-  };
   const mkLandmark = (site) => {
     const g = new THREE.Group();
     const base = new THREE.MeshStandardMaterial({ color:0x8d7b64, flatShading:true, roughness:1 });
     const wood = new THREE.MeshStandardMaterial({ color:0x6e4f35, flatShading:true, roughness:1 });
     const glowM = new THREE.MeshBasicMaterial({ color:site.color });
     switch (site.id) {
+      case 'workshop': { // the workshop: plank shed with a lit doorway, arcade cabinet, trophy, a tub with a toy boat, a hopping pixel hero
+        const plank = new THREE.MeshStandardMaterial({ color:0x8a6a4a, flatShading:true, roughness:1 });
+        const shed = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.09, 0.11), plank); shed.position.set(-0.02, 0.045, -0.02);
+        const roof = new THREE.Mesh(new THREE.CylinderGeometry(0.078, 0.078, 0.17, 3), new THREE.MeshStandardMaterial({ color:0x3f5f8a, flatShading:true }));
+        roof.rotation.set(-Math.PI/2, 0, Math.PI/2); roof.position.set(-0.02, 0.129, -0.02); // gable prism, ridge along x
+        const doorway = new THREE.Mesh(new THREE.BoxGeometry(0.046, 0.064, 0.004), new THREE.MeshBasicMaterial({ color:0xffd98a })); doorway.position.set(-0.045, 0.032, 0.036);
+        const sign = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.014, 0.004), wood); sign.position.set(-0.045, 0.076, 0.037);
+        const screenWin = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.02, 0.004), new THREE.MeshBasicMaterial({ color:0x8fd3ff })); screenWin.position.set(0.02, 0.05, 0.036);
+        // arcade cabinet by the door
+        const cab = new THREE.Group(); cab.position.set(0.1, 0, 0.05); cab.rotation.y = -0.5;
+        const cabM = new THREE.MeshStandardMaterial({ color:0x2c3566, flatShading:true });
+        const cBody = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.075, 0.03), cabM); cBody.position.y = 0.0375;
+        const cScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.026, 0.02), new THREE.MeshBasicMaterial({ color:0x8fd3ff })); cScreen.position.set(0, 0.054, 0.0175); cScreen.rotation.x = -0.2; cScreen.userData.screen = true;
+        const cTop = new THREE.Mesh(new THREE.BoxGeometry(0.038, 0.01, 0.032), new THREE.MeshBasicMaterial({ color:0xff7ab8 })); cTop.position.y = 0.08;
+        const cDeck = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.006, 0.014), cabM); cDeck.position.set(0, 0.036, 0.021);
+        const cStick = new THREE.Mesh(new THREE.SphereGeometry(0.0035, 5, 4), new THREE.MeshBasicMaterial({ color:0xff5a4a })); cStick.position.set(-0.008, 0.042, 0.022);
+        cab.add(cBody, cScreen, cTop, cDeck, cStick);
+        // the GameGala trophy on a plinth
+        const gold = new THREE.MeshStandardMaterial({ color:0xd9a441, metalness:0.55, roughness:0.45, flatShading:true });
+        const tPlinth = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, 0.03), base); tPlinth.position.set(-0.115, 0.015, 0.075);
+        const tFoot = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.009, 0.004, 7), gold); tFoot.position.set(-0.115, 0.032, 0.075);
+        const tStem = new THREE.Mesh(new THREE.CylinderGeometry(0.0028, 0.0028, 0.012, 5), gold); tStem.position.set(-0.115, 0.04, 0.075);
+        const tCup = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.005, 0.016, 8), gold); tCup.position.set(-0.115, 0.054, 0.075);
+        // a tub of water with a toy boat: Waterworld
+        const tub = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.036, 0.022, 10), wood); tub.position.set(0.08, 0.011, -0.1);
+        const tubWater = new THREE.Mesh(new THREE.CircleGeometry(0.035, 10), new THREE.MeshStandardMaterial({ color:0x4a9fc0, flatShading:true })); tubWater.rotation.x = -Math.PI/2; tubWater.position.set(0.08, 0.0225, -0.1);
+        const boat = new THREE.Group(); boat.position.set(0.08, 0.026, -0.1); boat.userData.bob = { y0: 0.026 };
+        const hull = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.008, 0.012), new THREE.MeshStandardMaterial({ color:0xc9705e, flatShading:true }));
+        const bMast = new THREE.Mesh(new THREE.CylinderGeometry(0.0015, 0.0015, 0.03, 4), wood); bMast.position.y = 0.018;
+        const bSail = new THREE.Mesh(new THREE.ConeGeometry(0.01, 0.024, 3), new THREE.MeshStandardMaterial({ color:0xf6efdc, flatShading:true })); bSail.position.set(0.005, 0.018, 0); bSail.scale.z = 0.25;
+        boat.add(hull, bMast, bSail);
+        // a pixel hero mid-jump, and a coin to chase
+        const hero = new THREE.Group(); hero.position.set(0.03, 0, 0.09); hero.userData.hop = { y0: 0, phase: 0 };
+        const hLegs = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.007, 0.008), new THREE.MeshStandardMaterial({ color:0x2c3566, flatShading:true })); hLegs.position.y = 0.0035;
+        const hBody = new THREE.Mesh(new THREE.BoxGeometry(0.013, 0.012, 0.009), new THREE.MeshStandardMaterial({ color:0xd64545, flatShading:true })); hBody.position.y = 0.013;
+        const hHead = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.01), new THREE.MeshStandardMaterial({ color:0xf0c8a0, flatShading:true })); hHead.position.y = 0.024;
+        hero.add(hLegs, hBody, hHead);
+        const coin = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.002, 8), gold); coin.rotation.x = Math.PI/2; coin.position.set(0.03, 0.062, 0.09); coin.userData.spin = 3;
+        g.add(shed, roof, doorway, sign, screenWin, cab, tPlinth, tFoot, tStem, tCup, tub, tubWater, boat, hero, coin); break;
+      }
+      case 'lighthouse': { // the lighthouse: banded tower with a turning beam, a murky test tank with a fish, an easel of pixels, a wireframe mesh
+        const white = new THREE.MeshStandardMaterial({ color:0xece6da, flatShading:true });
+        const red = new THREE.MeshStandardMaterial({ color:0xb8473a, flatShading:true });
+        const dark = new THREE.MeshStandardMaterial({ color:0x39405a, flatShading:true });
+        for (let i = 0; i < 7; i++) { const r = new THREE.Mesh(new THREE.DodecahedronGeometry(0.02 + (i % 3) * 0.006), base); const a = i / 7 * Math.PI * 2; r.position.set(Math.cos(a) * 0.05, 0.008, Math.sin(a) * 0.05); g.add(r); }
+        const TH = 0.28, R0 = 0.04, R1 = 0.026, BANDS = 4;
+        for (let b = 0; b < BANDS; b++) {
+          const ra = R0 + (R1 - R0) * b / BANDS, rb = R0 + (R1 - R0) * (b + 1) / BANDS;
+          const seg = new THREE.Mesh(new THREE.CylinderGeometry(rb, ra, TH / BANDS, 8), b % 2 ? red : white);
+          seg.position.y = 0.01 + (b + 0.5) * TH / BANDS; g.add(seg);
+        }
+        const lDoor = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.03, 0.004), dark); lDoor.position.set(0, 0.025, 0.04);
+        const gallery = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.008, 10), dark); gallery.position.y = 0.294;
+        const lamp = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.03, 8), new THREE.MeshBasicMaterial({ color:0xfff2b0 })); lamp.position.y = 0.313;
+        const lCap = new THREE.Mesh(new THREE.ConeGeometry(0.028, 0.035, 8), red); lCap.position.y = 0.3455;
+        const lKnob = new THREE.Mesh(new THREE.SphereGeometry(0.005, 5, 4), dark); lKnob.position.y = 0.366;
+        // the beam: two open cones turning around the lamp
+        const beam = new THREE.Group(); beam.position.y = 0.313; beam.userData.beam = true;
+        const beamM = new THREE.MeshBasicMaterial({ color:0xfff2b0, transparent:true, opacity:0.3, depthWrite:false, side:THREE.DoubleSide, blending:THREE.AdditiveBlending });
+        const b1 = new THREE.Mesh(new THREE.ConeGeometry(0.03, 0.2, 8, 1, true), beamM); b1.rotation.z = Math.PI/2; b1.position.x = 0.1;
+        const b2 = new THREE.Mesh(new THREE.ConeGeometry(0.03, 0.2, 8, 1, true), beamM); b2.rotation.z = -Math.PI/2; b2.position.x = -0.1;
+        beam.add(b1, b2);
+        // test tank: clear water on top, a murkier medium below, a fish swimming through
+        const stand = new THREE.Mesh(new THREE.BoxGeometry(0.068, 0.006, 0.046), wood); stand.position.set(0.105, 0.003, 0.06);
+        const tank = new THREE.Mesh(new THREE.BoxGeometry(0.062, 0.046, 0.04), new THREE.MeshStandardMaterial({ color:0x9fe8de, transparent:true, opacity:0.3, flatShading:true, depthWrite:false })); tank.position.set(0.105, 0.029, 0.06);
+        const murk = new THREE.Mesh(new THREE.BoxGeometry(0.058, 0.026, 0.036), new THREE.MeshStandardMaterial({ color:0x1f6f78, transparent:true, opacity:0.5, flatShading:true, depthWrite:false })); murk.position.set(0.105, 0.02, 0.06);
+        const fish = new THREE.Mesh(new THREE.BoxGeometry(0.011, 0.006, 0.004), new THREE.MeshBasicMaterial({ color:0xff9a3c })); fish.position.set(0.105, 0.03, 0.06); fish.userData.fish = { cx:0.105, cy:0.03, cz:0.06, r:0.018 };
+        // rasterizer: an easel with a triangle drawn in pixels, edge pixels lighter like supersampled coverage
+        const easel = new THREE.Group(); easel.position.set(-0.1, 0, 0.055); easel.rotation.y = 0.45;
+        const eLeg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.0025, 0.0025, 0.08, 4), wood); eLeg1.position.set(-0.018, 0.038, 0); eLeg1.rotation.z = -0.18;
+        const eLeg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.0025, 0.0025, 0.08, 4), wood); eLeg2.position.set(0.018, 0.038, 0); eLeg2.rotation.z = 0.18;
+        const eBoard = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.042, 0.003), new THREE.MeshStandardMaterial({ color:0xf6efdc, flatShading:true })); eBoard.position.set(0, 0.058, 0.004);
+        easel.add(eLeg1, eLeg2, eBoard);
+        const PX = 0.0062, fillM = new THREE.MeshBasicMaterial({ color:0x2a8f86 }), edgeM = new THREE.MeshBasicMaterial({ color:0x9fd9d2 });
+        for (let r = 0; r < 5; r++) for (let c = 0; c <= 4 - r; c++) {
+          const px = new THREE.Mesh(new THREE.BoxGeometry(PX * 0.92, PX * 0.92, 0.002), (c === 4 - r || r === 0 && c === 0) ? edgeM : fillM);
+          px.position.set(-0.016 + (c + r * 0.5) * PX, 0.043 + r * PX, 0.0065);
+          easel.add(px);
+        }
+        // half-edge mesh: a wireframe icosphere turning on a plinth
+        const wPlinth = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.05, 0.026), base); wPlinth.position.set(-0.075, 0.025, -0.085);
+        const wire = new THREE.Mesh(new THREE.IcosahedronGeometry(0.022, 1), new THREE.MeshBasicMaterial({ color:0x7fe0d4, wireframe:true })); wire.position.set(-0.075, 0.077, -0.085); wire.userData.spin = 0.6;
+        g.add(lDoor, gallery, lamp, lCap, lKnob, beam, stand, tank, murk, fish, easel, wPlinth, wire); break;
+      }
+      case 'relay': { // the relay mast: lattice tower, dish, hut, and a line of hop poles a probe walks one hop further each time
+        const steel = new THREE.MeshStandardMaterial({ color:0x9aa3b5, flatShading:true, metalness:0.3, roughness:0.7 });
+        const MH = 0.27, BW = 0.036, TW = 0.008, lean = Math.atan((BW - TW) / MH);
+        for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+          const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.0025, 0.0035, MH, 4), steel);
+          leg.position.set(sx * (BW + TW) / 2, MH / 2, sz * (BW + TW) / 2);
+          leg.rotation.set(-sz * lean, 0, sx * lean);
+          g.add(leg);
+        }
+        for (const y of [0.06, 0.12, 0.18, 0.235]) {
+          const w = BW + (TW - BW) * y / MH;
+          for (const sgn of [-1, 1]) {
+            const bx = new THREE.Mesh(new THREE.BoxGeometry(2 * w, 0.003, 0.003), steel); bx.position.set(0, y, sgn * w);
+            const bz = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.003, 2 * w), steel); bz.position.set(sgn * w, y, 0);
+            g.add(bx, bz);
+          }
+        }
+        const aerial = new THREE.Mesh(new THREE.CylinderGeometry(0.0018, 0.0018, 0.06, 4), steel); aerial.position.y = MH + 0.03;
+        const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.007, 6, 5), new THREE.MeshBasicMaterial({ color:0xff4a3a })); beacon.position.y = MH + 0.064; beacon.userData.blink = true;
+        const dish = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color:0xdfe3ea, flatShading:true, side:THREE.DoubleSide }));
+        dish.rotation.z = Math.PI / 2; dish.position.set(0.018, 0.19, 0);
+        const hut = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.036, 0.04), base); hut.position.set(-0.075, 0.018, 0.045);
+        const hutRoof = new THREE.Mesh(new THREE.ConeGeometry(0.042, 0.026, 4), new THREE.MeshStandardMaterial({ color:0x4a5670, flatShading:true })); hutRoof.position.set(-0.075, 0.049, 0.045); hutRoof.rotation.y = Math.PI / 4;
+        const hutDoor = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.024, 0.003), new THREE.MeshStandardMaterial({ color:0x54381f, flatShading:true })); hutDoor.position.set(-0.075, 0.012, 0.066);
+        g.add(aerial, beacon, dish, hut, hutRoof, hutDoor);
+        // hop poles run away from both trails
+        const pa = wrapAngle((site.outAngle || 0) / 2 + Math.PI);
+        const pd = new THREE.Vector3(Math.sin(pa), 0, Math.cos(pa));
+        const TOP = 0.066;
+        const pts = [pd.clone().multiplyScalar(0.034).setY(TOP)], lights = [];
+        [0.085, 0.13, 0.175, 0.22].forEach((dist, k) => {
+          const x = pd.x * dist + Math.cos(pa) * (k % 2 ? 0.008 : -0.008), z = pd.z * dist - Math.sin(pa) * (k % 2 ? 0.008 : -0.008);
+          const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.003, TOP - 0.004, 4), wood); pole.position.set(x, (TOP - 0.004) / 2, z);
+          const light = new THREE.Mesh(new THREE.SphereGeometry(0.0065, 6, 5), new THREE.MeshBasicMaterial({ color:0x6b3b35 })); light.position.set(x, TOP, z);
+          g.add(pole, light); lights.push(light); pts.push(new THREE.Vector3(x, TOP, z));
+        });
+        for (let k = 0; k + 1 < pts.length; k++) { // wires between the hops
+          const a = pts[k], b = pts[k + 1], len = a.distanceTo(b);
+          const wireSeg = new THREE.Mesh(new THREE.BoxGeometry(len, 0.0012, 0.0012), new THREE.MeshBasicMaterial({ color:0x3a3f4d }));
+          wireSeg.position.copy(a).add(b).multiplyScalar(0.5); wireSeg.rotation.y = -Math.atan2(b.z - a.z, b.x - a.x);
+          g.add(wireSeg);
+        }
+        const packet = new THREE.Mesh(new THREE.BoxGeometry(0.009, 0.009, 0.009), new THREE.MeshBasicMaterial({ color:0x9fe2ff }));
+        packet.userData.packet = { pts, lights };
+        g.add(packet); break;
+      }
+      case 'llo': { // the observatory: stone drum, turning dome with a telescope, a ring of small towns sending pages in
+        const stoneW = new THREE.MeshStandardMaterial({ color:0xe3ddd0, flatShading:true });
+        const dark = new THREE.MeshStandardMaterial({ color:0x2a2f40, flatShading:true });
+        const drum = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.075, 0.08, 12), stoneW); drum.position.y = 0.04;
+        const band = new THREE.Mesh(new THREE.CylinderGeometry(0.073, 0.073, 0.008, 12), base); band.position.y = 0.082;
+        const oDoor = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.045, 0.006), new THREE.MeshStandardMaterial({ color:0x54381f, flatShading:true })); oDoor.position.set(0, 0.0225, 0.072);
+        for (const a of [-0.75, 0.75, 2.2, -2.2]) {
+          const w = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.018, 0.004), new THREE.MeshBasicMaterial({ color:0xffd98a }));
+          w.position.set(Math.sin(a) * 0.072, 0.05, Math.cos(a) * 0.072); w.rotation.y = a; g.add(w);
+        }
+        const domeG = new THREE.Group(); domeG.position.y = 0.086; domeG.userData.dome = true;
+        const dome = new THREE.Mesh(new THREE.SphereGeometry(0.068, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color:0x9aa6c2, flatShading:true, metalness:0.4, roughness:0.5 }));
+        const slit = new THREE.Mesh(new THREE.TorusGeometry(0.0685, 0.007, 4, 8, Math.PI / 2), dark); slit.rotation.y = -Math.PI / 2;
+        const scope = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.012, 0.09, 8), new THREE.MeshStandardMaterial({ color:0xd9a441, metalness:0.5, roughness:0.4, flatShading:true }));
+        scope.position.set(0, 0.05, 0.05); scope.rotation.x = 0.9;
+        domeG.add(dome, slit, scope);
+        // small towns around the hill: the cities and counties in the corpus
+        const roofCols = [0xb8473a, 0x3f5f8a, 0x6a8a4a, 0x8a6a4a, 0xc9a13a];
+        const towns = [];
+        for (let i = 0; i < 11; i++) {
+          const a = i / 11 * Math.PI * 2 + 0.3, rr = 0.15 + (i % 3) * 0.017;
+          if (Math.abs(wrapAngle(a)) < 0.45 || Math.abs(wrapAngle(a - (site.outAngle || Math.PI))) < 0.45) continue; // leave both trails open
+          const hx = Math.sin(a) * rr, hz = Math.cos(a) * rr;
+          const hb = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.018, 0.022), stoneW); hb.position.set(hx, 0.009, hz); hb.rotation.y = a;
+          const hr = new THREE.Mesh(new THREE.ConeGeometry(0.019, 0.016, 4), new THREE.MeshStandardMaterial({ color:roofCols[i % 5], flatShading:true })); hr.position.set(hx, 0.026, hz); hr.rotation.y = a + Math.PI / 4;
+          g.add(hb, hr); towns.push(new THREE.Vector3(hx, 0.034, hz));
+        }
+        for (let i = 0; i < 6; i++) { // scanned pages drifting in from the towns
+          const pg = new THREE.Mesh(new THREE.PlaneGeometry(0.014, 0.018), new THREE.MeshBasicMaterial({ color:0xf6efdc, side:THREE.DoubleSide, transparent:true }));
+          pg.userData.feed = { from: towns[(i * 2) % towns.length], to: new THREE.Vector3(0, 0.12, 0), speed: 0.16 + i * 0.025, phase: i / 6 };
+          g.add(pg);
+        }
+        const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.036, 0.018), new THREE.MeshStandardMaterial({ color:0x6f7a8c, flatShading:true })); cabinet.position.set(0.04, 0.018, 0.095);
+        const oPost = new THREE.Mesh(new THREE.CylinderGeometry(0.0025, 0.0025, 0.05, 4), wood); oPost.position.set(-0.04, 0.025, 0.1);
+        const oLamp = new THREE.Mesh(new THREE.SphereGeometry(0.007, 6, 5), new THREE.MeshBasicMaterial({ color:0xffd98a })); oLamp.position.set(-0.04, 0.054, 0.1);
+        g.add(drum, band, oDoor, domeG, cabinet, oPost, oLamp); break;
+      }
       case 'berkeley': { // Sather Tower: slender shaft, top clocks, arched belfry, cornice + pinnacles, steep spire
         const stone = new THREE.MeshStandardMaterial({ color:0xe8e2d4, flatShading:true });
         const dark = new THREE.MeshStandardMaterial({ color:0x39405a, flatShading:true });
@@ -470,6 +820,16 @@
         const pil2 = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.014, 0.045, 6), base); pil2.position.set(0.06, 0.022, 0.075); pil2.rotation.z = 0.08;
         const lantern = new THREE.Mesh(new THREE.SphereGeometry(0.009, 6, 5), new THREE.MeshBasicMaterial({ color:0xffd98a })); lantern.position.set(0.036, 0.048, 0.052);
         const lpost = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.035, 4), wood); lpost.position.set(0.036, 0.026, 0.052);
+        // tied bundles of newspapers: the American Banker corpus
+        const paperM = new THREE.MeshStandardMaterial({ color:0xe9e2cf, flatShading:true });
+        const twineM = new THREE.MeshStandardMaterial({ color:0x8a6a4a, flatShading:true });
+        [[-0.1, -0.03, 0.3], [-0.105, -0.055, 1.1], [0.1, -0.06, 2.0]].forEach(([bx, bz, rot], k) => {
+          for (let b = 0; b < 2 + (k === 0 ? 1 : 0); b++) {
+            const bundle = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.012, 0.022), paperM); bundle.position.set(bx, 0.006 + b * 0.012, bz); bundle.rotation.y = rot + b * 0.2;
+            const tie = new THREE.Mesh(new THREE.BoxGeometry(0.0025, 0.0125, 0.0225), twineM); tie.position.copy(bundle.position); tie.rotation.y = bundle.rotation.y;
+            g.add(bundle, tie);
+          }
+        });
         g.add(s1, s2, o, ring, pil1, pil2, lantern, lpost); break;
       }
       case 'chatchw': { // healers hut: dome, steaming cauldron, raised herb bed in rows, drying rack, pennant
@@ -561,25 +921,27 @@
     const hit = new THREE.Mesh(new THREE.SphereGeometry(0.20, 8, 8), hitMat);
     hit.position.y = 0.12;
     g.add(hit);
+    if (site.id === 'lighthouse' || site.id === 'relay') { const tallHit = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.38, 6), hitMat); tallHit.position.y = 0.19; g.add(tallHit); }
     if (site.id === 'berkeley') { const towerHit = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.10, 0.60, 6), hitMat); towerHit.position.y = 0.30; g.add(towerHit); }
     g.userData.site = site;
     return g;
   };
 
   const landmarks = [];
-  for (const s of SITES) {
-    const dir = latLon(s.lat + 12, s.lon); // offset from crater center: on the floor, beside the pond
+  SITES.forEach((s, i) => {
+    const dir = lmDirs[i]; // offset from crater center: on the floor, beside the pond
     const g = mkLandmark(s);
-    const p = surfacePoint(dir);
-    g.position.copy(p);
-    g.quaternion.setFromUnitVectors(up, dir);
+    g.position.copy(surfacePoint(dir));
+    const qUp = new THREE.Quaternion().setFromUnitVectors(up, dir);
+    const front = new THREE.Vector3(0, 0, 1).applyQuaternion(qUp);
+    g.quaternion.copy(qUp).multiply(new THREE.Quaternion().setFromAxisAngle(up, signedAngle(front, s.inDir, dir))); // front door faces the trail in
     g.scale.setScalar(2.3); // larger, readable through the pixelation
     world.add(g);
     landmarks.push(g);
-  }
+  });
 
   // fireflies drifting around the villages at dusk
-  [0, 3, 4].forEach((li, k) => {
+  ['workshop', 'chatchw', 'spatch', 'liminal'].map(id => SITES.findIndex(s => s.id === id)).forEach((li, k) => {
     for (let i = 0; i < 2; i++) {
       const f = new THREE.Mesh(new THREE.SphereGeometry(0.007, 5, 4), new THREE.MeshBasicMaterial({ color:0xffd98a, transparent:true, opacity:0.8 }));
       f.userData.fly = { cx: (i ? 0.13 : -0.14), cz: (i ? -0.11 : 0.1), r: 0.05 + i * 0.02, h: 0.07 + i * 0.05, speed: 0.45 + k * 0.13 + i * 0.2, phase: k * 2.1 + i };
@@ -592,41 +954,7 @@
   shoot.visible = false;
   scene.add(shoot);
 
-  // ---- trail network: nearest landmarks connected by stone paths ----
-  const slerpDir = (a, b, t) => {
-    const theta = Math.acos(Math.max(-1, Math.min(1, a.dot(b))));
-    if (theta < 1e-4) return a.clone();
-    const sT = Math.sin(theta);
-    return a.clone().multiplyScalar(Math.sin((1-t)*theta)/sT).add(b.clone().multiplyScalar(Math.sin(t*theta)/sT)).normalize();
-  };
-  const lmDirs = SITES.map(s => latLon(s.lat + 12, s.lon));
-  const angBetween = (i, j) => Math.acos(Math.max(-1, Math.min(1, lmDirs[i].dot(lmDirs[j]))));
-  const edgeKey = (i, j) => i < j ? i + '-' + j : j + '-' + i;
-  const edgeSet = new Map();
-  for (let i = 0; i < lmDirs.length; i++) {   // each landmark links to its 2 nearest neighbors
-    const near = lmDirs.map((_, j) => j).filter(j => j !== i).sort((a, b) => angBetween(i, a) - angBetween(i, b)).slice(0, 2);
-    for (const j of near) edgeSet.set(edgeKey(i, j), [Math.min(i, j), Math.max(i, j)]);
-  }
-  // greedy nearest-neighbor route visiting every landmark (tour walks this), adding any missing edges
-  const route = [0]; const visitedN = new Set([0]);
-  while (visitedN.size < lmDirs.length) {
-    const cur = route[route.length - 1];
-    const next = lmDirs.map((_, j) => j).filter(j => !visitedN.has(j)).sort((a, b) => angBetween(cur, a) - angBetween(cur, b))[0];
-    edgeSet.set(edgeKey(cur, next), [Math.min(cur, next), Math.max(cur, next)]);
-    route.push(next); visitedN.add(next);
-  }
-  edgeSet.set(edgeKey(route[route.length - 1], route[0]), [Math.min(route[route.length - 1], route[0]), Math.max(route[route.length - 1], route[0])]);
-  route.push(route[0]); // close the loop
-  const pathEdges = [...edgeSet.values()];
-  const pathPhase = new Map(pathEdges.map((e, k) => [edgeKey(e[0], e[1]), k]));
-  const pathPointDir = (a, b, phase, t) => { // exact centerline of the drawn trail
-    let d = slerpDir(a, b, t);
-    const ahead = slerpDir(a, b, Math.min(1, t + 0.02));
-    const tangent = ahead.clone().sub(d);
-    let side = new THREE.Vector3(1, 0, 0);
-    if (tangent.lengthSq() > 1e-10) { const sd = d.clone().cross(tangent.normalize()); if (sd.lengthSq() > 1e-10) side = sd.normalize(); }
-    return d.clone().add(side.multiplyScalar(Math.sin(t * Math.PI * 3 + phase * 1.7) * 0.015)).normalize();
-  };
+  // ---- trail network: the story loop, drawn as stone paths ----
   try {
     const pathMat = new THREE.MeshStandardMaterial({ color:0x7b8577, flatShading:true, roughness:1, side:THREE.DoubleSide });
     const HALF_W = 0.018, LIFT = 0.010;
@@ -657,6 +985,8 @@
     });
   } catch (e) { console.error('paths failed, continuing without them:', e); }
 
+  world.quaternion.setFromUnitVectors(lmDirs[0], camDirTour); // open on the first stop
+
   // ---- geysers (rock mound + pulsing water column) ----
   const geysers = [];
   let gPlaced = 0, gGuard = 0;
@@ -664,7 +994,8 @@
     const dir = new THREE.Vector3(rand()*2-1, rand()*2-1, rand()*2-1).normalize();
     const e = elevOf(dir);
     if (e > -0.2 || e < -0.5) continue; // geysers on crater slopes
-    if (SITES.some(s => dir.dot(latLonDir(s.lat, s.lon)) > 0.9131)) continue; // stay out of the six village craters entirely
+    if (SITES.some(s => dir.dot(latLonDir(s.lat, s.lon)) > Math.cos(Math.acos(1 - VILLAGE_W) + 0.06))) continue; // stay out of the village craters entirely
+    if (onTrail(dir)) continue;
     const g = new THREE.Group();
     const mound = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.07, 7), new THREE.MeshStandardMaterial({ color:0x7f8583, flatShading:true, roughness:1 }));
     mound.position.y = 0.035;
@@ -740,15 +1071,15 @@
   let mode = 'tour', tourWaitUntil = 5.0, nowT = 0, prevT = 0; // let the onboarding caption breathe before the tour starts
   let walkLeg = 0, walkU = 0, announcedLeg = -1, lastActivity = 0; // position along the route
   const caption = document.getElementById('caption');
-  caption.textContent = 'Give the world a spin · every building holds a story';
+  caption.textContent = 'Drag to spin · pick a building to read its story';
   const aimAt = (d, k) => { // shortest-arc rotate so local direction d faces the camera
     const current = d.clone().applyQuaternion(world.quaternion).normalize();
-    Q_TMP.setFromUnitVectors(current, camDir);
+    Q_TMP.setFromUnitVectors(current, aimDir);
     Q_STEP.identity().slerp(Q_TMP, k);
     world.quaternion.premultiply(Q_STEP);
   };
   const flyTo = (s) => { // swoop, eased per-frame in the loop
-    flyDir = latLon(s.lat + 12, s.lon);
+    flyDir = siteDir(s);
     angVel.x = 0; angVel.y = 0;
   };
 
@@ -771,35 +1102,88 @@
   selRing.visible = false;
   world.add(selRing);
 
-  const openSite = (s) => {
+  const stopEl = panel.querySelector('.stop'), entriesEl = panel.querySelector('.entries');
+  const threadsEl = panel.querySelector('.threads'), threadList = threadsEl.querySelector('ul');
+  const prevBtn = panel.querySelector('.trail .prev'), nextBtn = panel.querySelector('.trail .next');
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const legendButtons = () => document.querySelectorAll('#legend button');
+  const revealLegend = (id) => { // phones: scroll the legend strip so the highlighted place is in view
+    if (innerWidth > 640) return;
+    const b = document.querySelector('#legend button[data-id="' + id + '"]');
+    if (b) b.parentElement.scrollTo({ left: b.offsetLeft - (b.parentElement.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' });
+  };
+  let current = null;
+  const openSite = (s, opts = {}) => {
+    current = s;
     mode = 'selected';
     lastActivity = nowT;
     camDir = camDirSel.clone();  // bird's eye swoops down to front facing
+    aimDir = camDirSel.clone().applyAxisAngle(X_AXIS, selTilt());
+    if (!userZoomed) camDist = baseDist * selZoom();
     flyTo(s);
-    const sd = latLon(s.lat + 12, s.lon);
+    const sd = siteDir(s);
     selRing.position.copy(surfacePoint(sd).add(sd.clone().multiplyScalar(0.04)));
     selRing.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), sd);
     selRing.visible = true;
     caption.textContent = '';
-    document.querySelectorAll('#legend button').forEach(b => b.classList.remove('touring'));
+    legendButtons().forEach(b => b.classList.remove('touring'));
+    const idx = SITES.indexOf(s);
+    stopEl.textContent = 'Stop ' + (idx + 1) + ' of ' + N_SITES + ' · ' + s.when;
     panel.querySelector('.where').textContent = s.where;
-    panel.querySelector('h2').textContent = s.name;
-    panel.querySelector('p').textContent = s.desc;
-    panel.querySelector('.tags').innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
-    const a = panel.querySelector('a.go');
-    if (s.link) { a.href=s.link; a.textContent='See it live →'; a.style.display='inline-block'; } else a.style.display='none';
+    const h2 = panel.querySelector('h2');
+    h2.textContent = s.name;
+    entriesEl.replaceChildren(...s.entries.map(en => {
+      const d = el('div', 'entry');
+      if (s.entries.length > 1 || en.title !== s.name) d.append(el('h3', null, en.title));
+      if (en.meta) d.append(el('div', 'meta', en.meta));
+      if (en.body) d.append(el('p', null, en.body));
+      if (en.rows) { const dl = el('dl', 'rows'); en.rows.forEach(([k, v]) => dl.append(el('dt', null, k), el('dd', null, v))); d.append(dl); }
+      if (en.tags && en.tags.length) { const tg = el('div', 'tags'); en.tags.forEach(x => tg.append(el('span', 'tag', x))); d.append(tg); }
+      if (en.links && en.links.length) {
+        const gl = el('div', 'golinks');
+        en.links.forEach(l => { const a = el('a', 'go', l.text); a.href = l.href; if (!l.href.startsWith('mailto:')) { a.target = '_blank'; a.rel = 'noopener'; } gl.append(a); });
+        d.append(gl);
+      }
+      return d;
+    }));
+    const threads = s.threads || [];
+    threadList.replaceChildren(...threads.map(th => {
+      const to = SITE_BY_ID[th.to], li = el('li'), b = el('button', 'thread');
+      b.type = 'button';
+      b.append(el('b', null, to.where), document.createTextNode(' ' + th.note));
+      b.addEventListener('click', () => openSite(to, { focus: true }));
+      li.append(b);
+      return li;
+    }));
+    threadsEl.hidden = threads.length === 0;
+    const prev = SITES[(idx - 1 + N_SITES) % N_SITES], next = SITES[(idx + 1) % N_SITES];
+    prevBtn.textContent = '← ' + prev.where; prevBtn.setAttribute('aria-label', 'Previous stop: ' + prev.where);
+    nextBtn.textContent = next.where + ' →'; nextBtn.setAttribute('aria-label', 'Next stop: ' + next.where);
+    prevBtn.onclick = () => openSite(prev, { focus: true });
+    nextBtn.onclick = () => openSite(next, { focus: true });
+    panel.scrollTop = 0;
     panel.classList.add('show');
-    document.querySelectorAll('#legend button').forEach(b => b.classList.toggle('active', b.dataset.id === s.id));
+    document.body.classList.add('panel-open');
+    legendButtons().forEach(b => b.classList.toggle('active', b.dataset.id === s.id));
+    revealLegend(s.id);
+    if (opts.focus) h2.focus({ preventScroll: true });
   };
   canvas.addEventListener('click', e => { const g = pick(e.clientX, e.clientY); if (g) openSite(g.userData.site); });
   const closePanel = () => {
+    const wasFocused = panel.contains(document.activeElement);
     panel.classList.remove('show');
-    document.querySelectorAll('#legend button').forEach(b => b.classList.remove('active'));
+    document.body.classList.remove('panel-open');
+    legendButtons().forEach(b => b.classList.remove('active'));
     selRing.visible = false;
     mode = 'tour';
     camDir = camDirTour.clone();
+    aimDir = camDir.clone();
+    if (!userZoomed) camDist = baseDist;
     tourWaitUntil = nowT + 2;
+    if (current) { walkLeg = SITES.indexOf(current); walkU = 0; } // pick the story up from the place you just read
     announcedLeg = -1; // re-announce the current leg so caption + legend highlight return
+    if (wasFocused && current) { const b = document.querySelector('#legend button[data-id="' + current.id + '"]'); if (b) b.focus({ preventScroll: true }); }
+    current = null;
   };
   panel.querySelector('.close').addEventListener('click', closePanel);
   addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
@@ -808,17 +1192,40 @@
   for (const s of SITES) {
     const b = document.createElement('button');
     b.type = 'button';
-    b.textContent = s.name;
+    b.textContent = s.label;
     const dot = document.createElement('span');
     dot.className = 'dot';
     dot.style.background = '#' + s.color.toString(16).padStart(6, '0');
     b.prepend(dot);
     b.dataset.id = s.id;
     b.title = s.where;
-    b.setAttribute('aria-label', 'Fly to ' + s.name + ' (' + s.where + ')');
-    b.addEventListener('click', () => openSite(s));
+    b.setAttribute('aria-label', 'Go to ' + s.where + ': ' + s.name);
+    b.addEventListener('click', () => openSite(s, { focus: true }));
     legend.appendChild(b);
   }
+
+  // traceroute: probe k walks out k hops, the k-th pole answers, the reply walks home
+  const HOP_T = 0.34, HOP_PAUSE = 0.35;
+  const animatePacket = (n, t) => {
+    const P = n.userData.packet;
+    if (!P.sched) { P.sched = []; let acc = 0; for (let k = 1; k < P.pts.length; k++) { P.sched.push({ k, start: acc }); acc += 2 * k * HOP_T + HOP_PAUSE; } P.total = acc; }
+    const tc = t % P.total;
+    let cur = P.sched[0];
+    for (const e of P.sched) if (tc >= e.start) cur = e;
+    const k = cur.k, local = tc - cur.start, out = k * HOP_T;
+    const pos = local < out ? local / HOP_T : Math.max(0, k - (local - out) / HOP_T);
+    const i = Math.min(Math.floor(pos), P.pts.length - 2);
+    n.position.lerpVectors(P.pts[i], P.pts[i + 1], Math.min(1, pos - i));
+    n.visible = local < 2 * out;
+    n.material.color.setHex(local < out ? 0x9fe2ff : 0xff7a6b); // probe out, ICMP reply back
+    P.lights.forEach((L, j) => L.material.color.setHex(j + 1 === k && local > out - 0.05 && local < out + 0.7 ? 0xffe08a : (j + 1 < k ? 0xa0524a : 0x6b3b35)));
+  };
+  const lookAt = new THREE.Vector3(), lookGoal = new THREE.Vector3();
+  const siteLookY = () => { // height where the camera-to-place line crosses z = 0: looking there centers the place
+    const cy = camDir.y * camDist, cz = camDir.z * camDist, sy = aimDir.y * R * 1.02, sz = aimDir.z * R * 1.02;
+    return cy + (sy - cy) * (cz / Math.max(0.1, cz - sz));
+  };
+  const hudEl = document.getElementById('hud');
 
   // ---------------- loop ----------------
   const clock = new THREE.Clock();
@@ -827,7 +1234,9 @@
     renderer.setSize(Math.floor(innerWidth/px), Math.floor(innerHeight/px), false);
     camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
     MAX_D = Math.max(10.5, fitDistance() * 1.2);
-    if (!userZoomed) camDist = Math.min(MAX_D, Math.max(7.6, fitDistance())); // phones start with the whole planet in frame
+    baseDist = Math.min(MAX_D, Math.max(7.6, fitDistance())); // phones start with the whole planet in frame
+    if (!userZoomed) camDist = baseDist * (mode === 'selected' ? selZoom() : 1);
+    if (mode === 'selected') aimDir = camDirSel.clone().applyAxisAngle(X_AXIS, selTilt());
   };
   addEventListener('resize', resize); resize();
   (function tick(){
@@ -839,30 +1248,28 @@
       if (announcedLeg !== walkLeg) {
         announcedLeg = walkLeg;
         const dest = SITES[route[walkLeg + 1]];
-        caption.textContent = 'Walking to ' + dest.where + '…';
-        document.querySelectorAll('#legend button').forEach(b => b.classList.toggle('touring', b.dataset.id === dest.id));
+        caption.textContent = 'Walking to ' + dest.where + ' · ' + dest.when;
+        legendButtons().forEach(b => b.classList.toggle('touring', b.dataset.id === dest.id));
+        revealLegend(dest.id);
       }
       walkU += dt / 7.0; // ~7 seconds per leg: a slow stroll
-      const i0 = route[walkLeg], j0 = route[walkLeg + 1];
-      const e = [Math.min(i0, j0), Math.max(i0, j0)];
-      const phase = pathPhase.get(e[0] + '-' + e[1]) || 0;
-      const forward = (i0 === e[0]);
+      const e = pathEdges[walkLeg];
       const u = Math.min(walkU, 1);
       if (walkU < 1) {
-        const f = pathPointDir(lmDirs[e[0]], lmDirs[e[1]], phase, forward ? u : 1 - u);
+        const f = pathPointDir(lmDirs[e[0]], lmDirs[e[1]], walkLeg, u);
         aimAt(f, 0.12);
       } else {
         // arrived at the leg's end: keep aiming until the landmark is truly centered, THEN linger
         const endDir = lmDirs[route[walkLeg + 1]];
         aimAt(endDir, 0.12);
         const cur = endDir.clone().applyQuaternion(world.quaternion).normalize();
-        if (cur.angleTo(camDir) < 0.05) { walkU = 0; walkLeg = (walkLeg + 1) % (route.length - 1); tourWaitUntil = t + 2.5; }
+        if (cur.angleTo(aimDir) < 0.05) { walkU = 0; walkLeg = (walkLeg + 1) % (route.length - 1); tourWaitUntil = t + 2.5; }
       }
     }
     if (flyDir !== null) {
       aimAt(flyDir, 0.08);
       const cur = flyDir.clone().applyQuaternion(world.quaternion).normalize();
-      if (cur.angleTo(camDir) < 0.02) flyDir = null;
+      if (cur.angleTo(aimDir) < 0.02) flyDir = null;
     }
     if (!dragging && (Math.abs(angVel.x) > 1e-5 || Math.abs(angVel.y) > 1e-5)) {
       screenSpin(angVel.y, angVel.x); // inertia in screen space
@@ -873,7 +1280,20 @@
     if (shootP < 0.06) { const q = shootP / 0.06; shoot.visible = true; shoot.position.set(-14 + q * 24, 9 - q * 5, -12); shoot.rotation.z = -0.2; shoot.material.opacity = 0.9 * (1 - q); }
     else shoot.visible = false;
     camera.position.lerp(camDir.clone().multiplyScalar(camDist), 0.06);
-    camera.lookAt(0, 0, 0);
+    // keep the focused place clear of the panel: aim past the planet center
+    lookGoal.set(0, 0, 0);
+    if (panel.classList.contains('show')) {
+      const tanV = Math.tan(20 * Math.PI / 180);
+      if (innerWidth <= 640) {
+        const top = hudEl.offsetHeight, bottom = innerHeight - panel.offsetHeight - 12;
+        lookGoal.y = siteLookY() + (((top + bottom) / 2 - innerHeight / 2) / (innerHeight / 2)) * camDist * tanV;
+      } else {
+        lookGoal.x = ((panel.offsetWidth + 24) / innerWidth) * camDist * tanV * camera.aspect;
+        lookGoal.y = siteLookY();
+      }
+    }
+    lookAt.lerp(lookGoal, 0.08);
+    camera.lookAt(lookAt);
     if (hoverDirty) { // raycast at most once per frame
       hoverDirty = false;
       const hg = pick(hoverX, hoverY);
@@ -891,6 +1311,16 @@
         if (n.userData.proto) { const o = n.userData.proto; const a = t * o.speed + o.phase; n.position.set(o.cx + Math.cos(a) * o.r, o.h + Math.sin(t * 2 + o.phase) * 0.008, o.cz + Math.sin(a) * o.r); n.rotation.y = a; n.rotation.x = a * 0.7; }
         if (n.userData.flag) n.rotation.y = Math.sin(t * 3) * 0.28;
         if (n.userData.fly) { const f = n.userData.fly; const a = t * f.speed + f.phase; n.position.set(f.cx + Math.cos(a) * f.r, f.h + Math.sin(t * 1.7 + f.phase) * 0.02, f.cz + Math.sin(a * 0.8) * f.r); n.material.opacity = 0.3 + (Math.sin(t * 4 + f.phase) + 1) * 0.3; }
+        if (n.userData.beam) n.rotation.y = t * 0.9;
+        if (n.userData.dome) n.rotation.y = Math.sin(t * 0.12) * 1.2;
+        if (n.userData.spin) n.rotation.y = t * n.userData.spin;
+        if (n.userData.blink) n.visible = (t % 1.4) < 0.7;
+        if (n.userData.screen) n.material.color.setHSL((t * 0.08) % 1, 0.65, 0.62 + Math.sin(t * 11) * 0.04);
+        if (n.userData.bob) { n.position.y = n.userData.bob.y0 + Math.sin(t * 2) * 0.0025; n.rotation.z = Math.sin(t * 1.6) * 0.12; n.rotation.y = t * 0.25; }
+        if (n.userData.hop) n.position.y = Math.abs(Math.sin(t * 3.2)) * 0.032;
+        if (n.userData.fish) { const f = n.userData.fish; n.position.x = f.cx + Math.sin(t * 0.8) * f.r; n.position.y = f.cy + Math.sin(t * 1.9) * 0.003; n.rotation.y = Math.cos(t * 0.8) >= 0 ? 0 : Math.PI; }
+        if (n.userData.feed) { const f = n.userData.feed; const p = (t * f.speed + f.phase) % 1; n.position.lerpVectors(f.from, f.to, p); n.position.y += Math.sin(p * Math.PI) * 0.06; n.rotation.y = t * 1.5 + f.phase * 6; n.material.opacity = Math.min(1, p * 6) * (1 - p * p); }
+        if (n.userData.packet) animatePacket(n, t);
         if (n.userData.page) { const pg = n.userData.page; const a = t * pg.speed + pg.phase; n.position.set(Math.cos(a) * pg.r, pg.h + Math.sin(t * 1.3 + pg.phase) * 0.012, Math.sin(a) * pg.r); n.rotation.y = -a; n.rotation.z = Math.sin(t + pg.phase) * 0.2; }
       });
     }
