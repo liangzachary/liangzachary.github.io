@@ -22,13 +22,13 @@
  "affiliation":{"@type":"CollegeOrUniversity","name":"University of California, Berkeley"}}
 </script>
 <style>
-  /* same palette as the World version: night sky, warm cream text, amber accent */
+  /* same palette as the World version: night sky, cream text, star-blue links */
   :root {
     color-scheme: dark;
     --ink: #f2ead8;
     --muted: #a8a08c;
-    --accent: #ffb570;
-    --rule: rgba(255, 181, 112, .32);
+    --accent: #a9c1f2;
+    --rule: rgba(169, 193, 242, .3);
     --bg: #070c1c;
     --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   }
@@ -39,7 +39,7 @@
     background: radial-gradient(120% 70% at 50% 110%, #0c1630 0%, #070c1c 45%, #05070f 80%, #030509 100%) fixed, var(--bg);
     -webkit-font-smoothing: antialiased;
   }
-  ::selection { background: rgba(255, 181, 112, .28); color: var(--ink); }
+  ::selection { background: rgba(169, 193, 242, .3); color: var(--ink); }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
   a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
@@ -68,7 +68,7 @@
   .item ul { margin-top: 3px; padding-left: 20px; }
   .item li { color: var(--ink); }
   .item li + li { margin-top: 2px; }
-  .item li::marker { color: var(--accent); }
+  .item li::marker { color: var(--muted); }
   .item li b { color: var(--ink); }
   .links { margin-left: 8px; font-weight: 400; }
   .links a + a { margin-left: 10px; }
