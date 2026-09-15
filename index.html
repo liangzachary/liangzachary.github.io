@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zachary Liang · World</title>
-<meta name="description" content="Zachary Liang. UC Berkeley Economics &amp; Data Science, expected December 2027. I build data-heavy products and the tooling around them.">
+<meta name="description" content="Zachary Liang. UC Berkeley Economics &amp; Data Science, expected December 2027.">
 <link rel="canonical" href="https://liangzachary.github.io/">
 <meta property="og:title" content="Zachary Liang">
-<meta property="og:description" content="A small world you can spin. Each place holds one part of the story. UC Berkeley Economics &amp; Data Science, expected December 2027.">
+<meta property="og:description" content="UC Berkeley Economics &amp; Data Science, expected December 2027.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://liangzachary.github.io/">
 <meta name="twitter:card" content="summary">
@@ -20,7 +20,7 @@
  "affiliation":{"@type":"CollegeOrUniversity","name":"University of California, Berkeley"}}
 </script>
 <style>
-  :root { --ink:#f2ead8; --muted:#a8a08c; --accent:#ffb570; --panelbg:rgba(19,14,8,.92); --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; }
+  :root { --ink:#eef1f7; --muted:#9aa6bd; --accent:#a9c1f2; --panelbg:rgba(8,12,26,.92); --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { height:100%; }
   body { color:var(--ink); font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; overflow:hidden;
@@ -35,80 +35,68 @@
   #hud .hint { font-size:13px; color:var(--muted); margin-right:6px; }
   #hud nav { text-align:right; line-height:2.4; max-width:62%; }
   #hud a { pointer-events:auto; color:var(--muted); text-decoration:none; font-size:13px; margin-left:8px;
-           border:1px solid rgba(255,181,112,.28); border-radius:999px; padding:5px 13px; background:rgba(19,14,8,.65); transition:all .15s; }
+           border:1px solid rgba(169,193,242,.28); border-radius:999px; padding:5px 13px; background:rgba(8,12,26,.65); transition:all .15s; }
   #hud a:hover { color:var(--ink); border-color:var(--accent); }
   #hud a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
-  #hud a.primary { background:var(--accent); color:#221306; border-color:var(--accent); font-weight:650; }
-  #hud a.primary:hover { background:#ffc78f; color:#221306; }
-  #hud .sub { font-size:13.5px; color:var(--muted); margin-top:4px; max-width:46ch; font-family:var(--serif); font-style:italic; }
-  #hud .sub span { display:block; }
+  #hud a.primary { background:var(--accent); color:#0a1020; border-color:var(--accent); font-weight:650; }
+  #hud a.primary:hover { background:#c6d6f7; color:#0a1020; }
+  #hud .sub { font-size:13.5px; color:var(--muted); margin-top:4px; max-width:46ch; font-family:var(--serif); }
 
   #panel {
     position:fixed; right:24px; top:50%; transform:translateY(-50%) translateX(24px);
     width:min(360px, calc(100vw - 48px)); background:var(--panelbg);
-    border:1px solid rgba(255,181,112,.3); border-radius:16px; padding:24px;
+    border:1px solid rgba(169,193,242,.3); border-radius:16px; padding:24px;
     max-height:min(76vh, 640px, calc(100vh - 230px)); overflow-y:auto; overscroll-behavior:contain;
     opacity:0; visibility:hidden; pointer-events:none; transition:opacity .25s, transform .25s, visibility .25s; z-index:6;
   }
   #panel.show { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(-50%) translateX(0); backdrop-filter:blur(10px); transition:opacity .25s, transform .25s, visibility 0s; }
-  #panel .stop { font-size:11.5px; color:var(--muted); letter-spacing:.06em; margin-bottom:4px; font-variant-numeric:tabular-nums; }
-  #panel .where { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:650; font-family:var(--serif); }
-  #panel h2 { font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; font-size:21px; font-weight:600; margin:6px 0 10px; }
+  #panel h2 { font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; font-size:21px; font-weight:600; margin:0 32px 10px 0; }
   #panel h2:focus { outline:none; }
   #panel p { font-size:14.5px; color:var(--muted); line-height:1.6; font-family:var(--serif); }
-  #panel .entry + .entry { margin-top:16px; padding-top:14px; border-top:1px dashed rgba(255,181,112,.22); }
+  #panel .entry + .entry { margin-top:16px; padding-top:14px; border-top:1px dashed rgba(169,193,242,.22); }
   #panel h3 { font-family:var(--serif); font-size:16px; font-weight:600; color:var(--ink); line-height:1.35; }
-  #panel .meta { font-size:12px; color:var(--accent); opacity:.85; margin:2px 0 6px; font-family:var(--serif); font-style:italic; }
+  #panel .meta { font-size:12.5px; color:var(--accent); margin:2px 0 6px; font-family:var(--serif); }
   #panel .rows { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-family:var(--serif); font-size:13.5px; line-height:1.45; }
   #panel .rows dt { color:var(--accent); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; padding-top:2px; white-space:nowrap; }
   #panel .rows dd { color:var(--muted); }
   #panel .golinks { display:flex; flex-wrap:wrap; gap:4px 16px; }
-  #panel .threads { margin-top:18px; padding-top:12px; border-top:1px solid rgba(255,181,112,.22); }
-  #panel .label { font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:6px; }
-  #panel .threads ul { list-style:none; }
-  #panel .threads li + li { margin-top:6px; }
-  #panel .thread { display:block; width:100%; text-align:left; background:none; border:none; padding:4px 0; cursor:pointer; font-family:var(--serif); font-size:13.5px; color:var(--muted); line-height:1.45; }
-  #panel .thread b { color:var(--ink); font-weight:600; }
-  #panel .thread b::after { content:" \2192"; color:var(--accent); }
-  #panel .thread:hover b { color:var(--accent); }
-  #panel .trail { position:sticky; bottom:-24px; display:flex; justify-content:space-between; gap:10px; margin:16px -24px -24px; padding:14px 24px 16px; background:linear-gradient(rgba(19,14,8,0), rgb(19,14,8) 12px); }
-  #panel .trail button { flex:1 1 0; min-width:0; background:#2a1f13; border:1px solid rgba(255,181,112,.3); color:var(--ink); border-radius:10px; padding:8px 10px; font-family:var(--serif); font-size:13px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #panel .trail { position:sticky; bottom:-24px; display:flex; justify-content:space-between; gap:10px; margin:16px -24px -24px; padding:14px 24px 16px; background:linear-gradient(rgba(8,12,26,0), rgb(8,12,26) 12px); }
+  #panel .trail button { flex:1 1 0; min-width:0; background:#141c33; border:1px solid rgba(169,193,242,.3); color:var(--ink); border-radius:10px; padding:8px 10px; font-family:var(--serif); font-size:13px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #panel .trail button.next { text-align:right; }
   #panel .trail button.prev { text-align:left; }
   #panel .trail button:hover { border-color:var(--accent); }
-  #panel .thread:focus-visible, #panel .trail button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
+  #panel .trail button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
   #panel .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
-  #panel .tag { font-size:11.5px; color:var(--accent); border:1px solid rgba(255,181,112,.4); padding:2px 9px; border-radius:999px; }
+  #panel .tag { font-size:11.5px; color:var(--accent); border:1px solid rgba(169,193,242,.4); padding:2px 9px; border-radius:999px; }
   #panel a.go { display:inline-block; margin-top:14px; color:var(--accent); font-size:13.5px; font-weight:600; text-decoration:none; }
   #panel .close { position:absolute; top:2px; right:2px; width:44px; height:44px; display:grid; place-items:center; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; border-radius:10px; }
   #panel .close:hover { color:var(--ink); }
   #panel .close:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
 
-  #tip { position:fixed; padding:5px 12px; background:var(--panelbg); border:1px solid rgba(255,181,112,.35); border-radius:8px; font-size:13px; font-family:var(--serif); pointer-events:none; opacity:0; transform:scale(.96); transition:opacity .12s, transform .12s; z-index:7; white-space:nowrap; }
+  #tip { position:fixed; padding:5px 12px; background:var(--panelbg); border:1px solid rgba(169,193,242,.35); border-radius:8px; font-size:13px; font-family:var(--serif); pointer-events:none; opacity:0; transform:scale(.96); transition:opacity .12s, transform .12s; z-index:7; white-space:nowrap; }
   #tip.on { opacity:1; transform:scale(1); }
 
   #legend { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:100%; }
   #legend button {
-    white-space:nowrap; background:rgba(19,14,8,.82); border:1px solid rgba(255,181,112,.3); color:var(--muted);
+    white-space:nowrap; background:rgba(8,12,26,.82); border:1px solid rgba(169,193,242,.3); color:var(--muted);
     border-radius:999px; padding:7px 16px; font-size:13px; font-family:var(--serif); cursor:pointer; transition:all .15s, transform .15s;
   }
   #legend button:hover { transform:translateY(-1px); }
-  #legend button .dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; vertical-align:1px; }
   #legend button:hover, #legend button.active { color:var(--ink); border-color:var(--accent); }
-  #legend button.active { background:rgba(255,181,112,.14); }
-  #legend button.touring { border-color:rgba(255,181,112,.55); color:#cfd6ea; }
+  #legend button.active { background:rgba(169,193,242,.14); }
+  #legend button.touring { border-color:rgba(169,193,242,.55); color:#cfd6ea; }
   #legend button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
   #panel a.go:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
-  #panel a.cv { display:block; margin-top:16px; padding-top:12px; border-top:1px dashed rgba(255,181,112,.25); color:var(--ink); font-size:13px; font-weight:600; text-decoration:none; }
+  #panel a.cv { display:block; margin-top:16px; padding-top:12px; border-top:1px dashed rgba(169,193,242,.25); color:var(--ink); font-size:13px; font-weight:600; text-decoration:none; }
   #panel a.cv:hover { color:var(--accent); }
   #panel a.cv:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
 
   #bottomui { position:fixed; bottom:calc(22px + env(safe-area-inset-bottom, 0px)); left:50%; transform:translateX(-50%); width:min(1040px, 94vw); display:flex; flex-direction:column; align-items:center; gap:10px; z-index:5; transition:opacity .25s; pointer-events:none; }
   #bottomui > * { pointer-events:auto; }
-  #credit { font-family:var(--serif); font-style:italic; font-size:11px; color:var(--muted); opacity:.75; }
+  #credit { font-family:var(--serif); font-size:11px; color:var(--muted); opacity:.75; }
   #credit a { color:var(--muted); pointer-events:auto; text-decoration:underline dotted; }
   #credit a:hover { color:var(--ink); }
-  #caption { color:var(--muted); font-size:14px; font-style:italic; letter-spacing:.03em; min-height:18px; pointer-events:none; transition:opacity .4s; font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; }
+  #caption { color:var(--muted); font-size:14px; letter-spacing:.03em; min-height:18px; pointer-events:none; transition:opacity .4s; font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; }
 
   @media (max-width: 640px) {
     #hud { flex-direction:column; align-items:stretch; gap:8px; padding:calc(12px + env(safe-area-inset-top, 0px)) 0 0; }
@@ -122,8 +110,7 @@
     #legend { flex-wrap:nowrap; justify-content:flex-start; max-width:100vw; overflow-x:auto; gap:6px; padding:2px 16px 4px; scroll-snap-type:x proximity; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
     #legend::-webkit-scrollbar { display:none; }
     #legend button { flex:none; padding:6px 11px; font-size:12px; scroll-snap-align:center; }
-    #legend button .dot { width:6px; height:6px; margin-right:5px; }
-    #caption { font-size:12px; padding:0 16px; text-align:center; }
+      #caption { font-size:12px; padding:0 16px; text-align:center; }
     #credit { font-size:10px; padding:0 16px; text-align:center; }
     #panel { left:12px; right:12px; top:auto; width:auto; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); max-height:56vh; padding:20px 18px 18px; transform:translateY(24px); }
     #panel.show { transform:translateY(0); }
@@ -148,7 +135,7 @@
 <div id="hud">
   <div>
     <h1>Zachary Liang</h1>
-    <div class="sub"><span>UC Berkeley · Economics &amp; Data Science · Dec 2027</span> <span>I build data-heavy products and the tooling around them.</span></div>
+    <div class="sub">UC Berkeley, Economics &amp; Data Science, Dec 2027</div>
   </div>
   <nav aria-label="Links">
     <a class="primary" href="./Zachary_Liang_Resume.pdf">Resume (PDF)</a>
@@ -161,12 +148,9 @@
 
 <div id="panel" role="region" aria-label="Place details">
   <button class="close" type="button" aria-label="Close">×</button>
-  <div class="stop"></div>
-  <div class="where"></div>
   <h2 tabindex="-1"></h2>
   <div class="entries"></div>
-  <div class="threads"><div class="label">Connected places</div><ul></ul></div>
-  <a class="cv" href="./Zachary_Liang_Resume.pdf">Resume (PDF) →</a>
+  <a class="cv" href="./Zachary_Liang_Resume.pdf">Resume (PDF)</a>
   <div class="trail"><button class="prev" type="button"></button><button class="next" type="button"></button></div>
 </div>
 
@@ -174,11 +158,11 @@
 <div id="bottomui">
   <div id="caption"></div>
   <div id="legend"></div>
-  <div id="credit">World inspired by <a href="https://www.mobiusdigitalgames.com/outer-wilds.html" target="_blank" rel="noopener">Outer Wilds</a>, rebuilt from scratch</div>
+  <div id="credit">Inspired by <a href="https://www.mobiusdigitalgames.com/outer-wilds.html" target="_blank" rel="noopener">Outer Wilds</a></div>
 </div>
 
 <div id="fallback">
-  <p>The 3D view is off on this device.<br>Everything is on the <a href="./text.html">text version</a>.</p>
+  <p>The 3D view is off on this device.<br>See the <a href="./text.html">text version</a>.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -191,20 +175,16 @@
   // from the first games, through Berkeley, research, and work, and back to games.
   // lat/lon is the village crater; the building stands 12 degrees north of it, beside the pond.
   const SITES = [
-    { id:'workshop', label:'Games', name:'Games', where:'The Workshop', when:'Waterworld, then Murica', lat:18, lon:0, color:0x8fd3ff,
+    { id:'workshop', label:'Games', name:'Games', lat:18, lon:0, color:0x8fd3ff,
       entries:[
-        { title:'Waterworld', meta:'GameGala 2021 · First Place, G9-12 division',
+        { title:'Waterworld', meta:'GameGala 2021 · First Place, G9-12',
           body:'I made games in my free time from middle school through high school. Waterworld won First Place in the G9-12 division at GameGala 2021, a game-development competition.',
           tags:['Game dev'] },
         { title:'Murica', meta:'Godot · GDScript · solo',
           body:'I set game dev aside in college and came back to it with Murica. I built it from scratch, alone, in Godot and GDScript. I own the gameplay code, systems, and mechanics.',
-          tags:['Godot','GDScript'], links:[{ href:'https://github.com/liangzachary/Murica', text:'GitHub →' }] },
-      ],
-      threads:[
-        { to:'lighthouse', note:'More C++ work, on rendering.' },
-        { to:'berkeley', note:'Where the games went on hold.' },
-      ] },
-    { id:'berkeley', label:'UC Berkeley', name:'UC Berkeley', where:'The Campanile', when:'Expected December 2027', lat:-36, lon:36, color:0xffe08a,
+          tags:['Godot','GDScript'], links:[{ href:'https://github.com/liangzachary/Murica', text:'GitHub' }] },
+      ], },
+    { id:'berkeley', label:'UC Berkeley', name:'UC Berkeley', lat:-36, lon:36, color:0xffe08a,
       entries:[
         { title:'B.A. Economics & Data Science', meta:'Expected December 2027 · Berkeley, CA',
           body:'Coursework: Econometrics, Public Economics, Probability and Statistics, Linear Algebra, Microeconomic and Macroeconomic Theory, Data Science (Data 100), Data Structures (CS 61B), Computer Graphics (CS 184), and Computer Networking (CS 168).',
@@ -217,77 +197,48 @@
             ['Tools', 'Git, Claude Code, MCP, PostgreSQL, MySQL, Excel VBA, LaTeX'],
             ['Languages', 'English and Mandarin, both fluent'],
           ] },
-        { title:'Open to internships', meta:'Fall 2026 · Spring 2027 · Summer 2027',
-          body:'Internships in AI/ML, data science, and data engineering.',
-          links:[{ href:'mailto:liangzachary20@gmail.com', text:'liangzachary20@gmail.com →' }] },
-      ],
-      threads:[
-        { to:'fed', note:'Research in the Economics Department.' },
-        { to:'relay', note:'CS 168 project.' },
-        { to:'lighthouse', note:'CS 184 projects.' },
-      ] },
-    { id:'fed', label:'Economics Research', name:'Economics Research', where:'The Archive', when:'2025', lat:20, lon:72, color:0xa1e3b6,
+      ], },
+    { id:'fed', label:'Economics Research', name:'Economics Research', lat:20, lon:72, color:0xa1e3b6,
       entries:[
         { title:'Research Assistant, UC Berkeley Economics', meta:'Dr. Emily Martell · Jan 2025 to Dec 2025',
           body:'I measured moral suasion by the Federal Reserve, FDIC, and OCC across tens of thousands of American Banker articles. I built an LLM classification pipeline on the OpenAI API with versioned, agency-specific prompts. I validated labels against a 500-article human-labeled set and used two independent runs per article as a consistency check. I built directional and non-directional moral suasion indices and wrote the methodology and results sections.',
           tags:['Economics','OpenAI API','Validation'] },
         { title:'American Banker News Corpus', meta:'Python · Selenium',
-          body:'The data behind the study. A Selenium pipeline collected 10,000+ articles with session persistence, rate limiting, and retries. I backfilled missing months by hand from NewsBank.',
+          body:'I built a Selenium pipeline that collected 10,000+ articles with session persistence, rate limiting, and retries. I backfilled missing months by hand from NewsBank. This is the data behind the study.',
           tags:['Python','Selenium','Data engineering'] },
-      ],
-      threads:[
-        { to:'llo', note:'A new corpus: LLM outputs checked against source ordinances.' },
-        { to:'chatchw', note:'LLM pipelines on the OpenAI API, applied to clinical manuals.' },
-      ] },
-    { id:'spatch', label:'Spatch', name:'Spatch', where:'The Cookfire', when:'Porto', lat:-40, lon:108, color:0xd7b3ff,
+      ], },
+    { id:'spatch', label:'Spatch', name:'Spatch', lat:-40, lon:108, color:0xd7b3ff,
       entries:[
         { title:'Spatch', meta:'European Innovation Academy · Porto',
           body:'A full-stack cooking EdTech platform. The front end is React and Tailwind, and the back end is FastAPI and SQLModel. It has auth, recipe CRUD, progress tracking, and image upload. I ran usability tests with students and iterated on the results.',
           tags:['React','Tailwind','FastAPI','SQLModel'],
-          links:[{ href:'https://github.com/liangzachary/pantrypal-backend', text:'Backend →' }, { href:'https://github.com/liangzachary/pantrypal-frontend', text:'Frontend →' }] },
-      ],
-      threads:[
-        { to:'millpond', note:'The same front-end stack, React and Tailwind.' },
-      ] },
-    { id:'chatchw', label:'ChatCHW', name:'ChatCHW', where:"The Healers' Hut", when:'Aug 2025 to Aug 2026', lat:12, lon:144, color:0xff9d9d,
+          links:[{ href:'https://github.com/liangzachary/pantrypal-backend', text:'Backend' }, { href:'https://github.com/liangzachary/pantrypal-frontend', text:'Frontend' }] },
+      ], },
+    { id:'chatchw', label:'ChatCHW', name:'ChatCHW', lat:12, lon:144, color:0xff9d9d,
       entries:[
         { title:'Research Assistant, Berkeley Haas', meta:'Prof. David Levine · Aug 2025 to Aug 2026',
           body:'I built LLM pipelines on the OpenAI API that turn WHO clinical manuals into structured, versioned decision tables (DMN) and XLSForms for the Community Health Toolkit. I built evaluation and delivery tooling: synthetic test cases, end-to-end checks against source text, and a guarded retrieval-augmented query layer with logging.',
           tags:['OpenAI API','DMN','XLSForm','RAG'] },
-      ],
-      threads:[
-        { to:'llo', note:'Model output checked against source text, this time on ordinances.' },
-        { to:'fed', note:'The earlier LLM pipeline, for economics.' },
-      ] },
-    { id:'millpond', label:'Mill Pond', name:'Mill Pond Research', where:'The Mill Pond', when:'Sep 2025 to Jan 2026', lat:-44, lon:180, color:0x9ff2ff,
+      ], },
+    { id:'millpond', label:'Mill Pond', name:'Mill Pond Research', lat:-44, lon:180, color:0x9ff2ff,
       entries:[
         { title:'Frontend Engineer', meta:'Sep 2025 to Jan 2026',
           body:'I designed and built the company website end to end. It went from Figma wireframes to a responsive, component-based React and Tailwind implementation.',
-          tags:['Figma','React','Tailwind'], links:[{ href:'https://www.millpondresearch.com/', text:'Live site →' }] },
-      ],
-      threads:[
-        { to:'liminal', note:'Front-end work, then design systems.' },
-        { to:'spatch', note:'The same stack, React and Tailwind, on Spatch.' },
-      ] },
-    { id:'liminal', label:'Liminal Machines', name:'Liminal Machines', where:'The Foundry Camp', when:'Jun 2026 to Aug 2026', lat:16, lon:-144, color:0xffb570,
+          tags:['Figma','React','Tailwind'], links:[{ href:'https://www.millpondresearch.com/', text:'Live site' }] },
+      ], },
+    { id:'liminal', label:'Liminal Machines', name:'Liminal Machines', lat:16, lon:-144, color:0xffb570,
       entries:[
         { title:'Design Engineering Intern, Limion', meta:'Liminal Machines, Inc. · Jun 2026 to Aug 2026',
           body:'I built a custom ESLint plugin with AST rules that enforced the design system in code. I ran it live across the repo, with 255 findings and zero errors, and paired it with a Claude Code check. I made design-system fixes to typography, motion, and card tokens, with Storybook coverage. I audited the product\'s board AI agent (FastAPI, WebSocket intents, 28 tools) and its Storybook (267 stories) down to file-and-line citations. That audit set the scope for the agent-workflow redesign.',
           tags:['ESLint','AST','Storybook','Claude Code'] },
-      ],
-      threads:[
-        { to:'millpond', note:'The React and Tailwind work before this.' },
-      ] },
-    { id:'relay', label:'Traceroute', name:'Traceroute', where:'The Relay Mast', when:'CS 168', lat:-34, lon:-108, color:0xff7a6b,
+      ], },
+    { id:'relay', label:'Traceroute', name:'Traceroute', lat:-34, lon:-108, color:0xff7a6b,
       entries:[
         { title:'Traceroute', meta:'Python · Computer Networking (CS 168)',
           body:'I implemented traceroute in Python, starting from raw ICMP parsing.',
           tags:['Python','ICMP','Networking'] },
-      ],
-      threads:[
-        { to:'berkeley', note:'Coursework.' },
-      ] },
-    { id:'lighthouse', label:'Graphics', name:'Computer Graphics', where:'The Lighthouse', when:'CS 184', lat:22, lon:-72, color:0x7fe0d4,
+      ], },
+    { id:'lighthouse', label:'Graphics', name:'Computer Graphics', lat:22, lon:-72, color:0x7fe0d4,
       entries:[
         { title:'Underwater Path Tracer', meta:'C++ · Computer Graphics (CS 184)',
           body:'I extended a path tracer to render underwater scenes. I added a participating medium with Henyey-Greenstein volumetric scattering. I swept depth and water turbidity and validated attenuation against analytic single scattering.',
@@ -295,21 +246,13 @@
         { title:'Software Rasterizer', meta:'C++ · Computer Graphics (CS 184)',
           body:'A software rasterizer with supersampling, 2D transforms, and half-edge mesh operations.',
           tags:['C++','Rasterization','Half-edge meshes'] },
-      ],
-      threads:[
-        { to:'workshop', note:'The games, in Godot.' },
-        { to:'berkeley', note:'Coursework.' },
-      ] },
-    { id:'llo', label:'Local Laws Observatory', name:'Local Laws Observatory', where:'The Observatory', when:'Sep 2026 to present', lat:-38, lon:-36, color:0xc9b8ff,
+      ], },
+    { id:'llo', label:'Local Laws Observatory', name:'Local Laws Observatory', lat:-38, lon:-36, color:0xc9b8ff,
       entries:[
         { title:'Research Assistant, UC Berkeley School of Information', meta:'Prof. Diag Davenport, Dr. Denis Peskoff · Sep 2026 to present',
           body:'I contribute to LOCUS, a machine-readable corpus of US municipal and county ordinance codes across 9,239 cities and counties. I write Python for document ingestion, OCR, metadata extraction, deduplication, and data-quality checks over scanned legal documents. I build evaluation datasets and validate LLM outputs against the source ordinances. I run error analysis on retrieval and extraction failures.',
           tags:['Python','OCR','LLM evaluation','Data quality'] },
-      ],
-      threads:[
-        { to:'fed', note:'An earlier corpus: American Banker articles.' },
-        { to:'chatchw', note:'Earlier evaluation against source text, on clinical manuals.' },
-      ] },
+      ], },
   ];
   const SITE_BY_ID = Object.fromEntries(SITES.map(s => [s.id, s]));
 
@@ -1071,7 +1014,7 @@
   let mode = 'tour', tourWaitUntil = 5.0, nowT = 0, prevT = 0; // let the onboarding caption breathe before the tour starts
   let walkLeg = 0, walkU = 0, announcedLeg = -1, lastActivity = 0; // position along the route
   const caption = document.getElementById('caption');
-  caption.textContent = 'Drag to spin · pick a building to read its story';
+  caption.textContent = 'Drag to rotate. Click a building to see details.';
   const aimAt = (d, k) => { // shortest-arc rotate so local direction d faces the camera
     const current = d.clone().applyQuaternion(world.quaternion).normalize();
     Q_TMP.setFromUnitVectors(current, aimDir);
@@ -1098,12 +1041,11 @@
   addEventListener('mousemove', e => { hoverX = e.clientX; hoverY = e.clientY; hoverDirty = true; });
 
   const panel = document.getElementById('panel');
-  const selRing = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.014, 6, 32), new THREE.MeshBasicMaterial({ color:0xffb570 }));
+  const selRing = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.014, 6, 32), new THREE.MeshBasicMaterial({ color:0xa9c1f2 }));
   selRing.visible = false;
   world.add(selRing);
 
-  const stopEl = panel.querySelector('.stop'), entriesEl = panel.querySelector('.entries');
-  const threadsEl = panel.querySelector('.threads'), threadList = threadsEl.querySelector('ul');
+  const entriesEl = panel.querySelector('.entries');
   const prevBtn = panel.querySelector('.trail .prev'), nextBtn = panel.querySelector('.trail .next');
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
   const legendButtons = () => document.querySelectorAll('#legend button');
@@ -1128,8 +1070,6 @@
     caption.textContent = '';
     legendButtons().forEach(b => b.classList.remove('touring'));
     const idx = SITES.indexOf(s);
-    stopEl.textContent = 'Stop ' + (idx + 1) + ' of ' + N_SITES + ' · ' + s.when;
-    panel.querySelector('.where').textContent = s.where;
     const h2 = panel.querySelector('h2');
     h2.textContent = s.name;
     entriesEl.replaceChildren(...s.entries.map(en => {
@@ -1146,19 +1086,9 @@
       }
       return d;
     }));
-    const threads = s.threads || [];
-    threadList.replaceChildren(...threads.map(th => {
-      const to = SITE_BY_ID[th.to], li = el('li'), b = el('button', 'thread');
-      b.type = 'button';
-      b.append(el('b', null, to.where), document.createTextNode(' ' + th.note));
-      b.addEventListener('click', () => openSite(to, { focus: true }));
-      li.append(b);
-      return li;
-    }));
-    threadsEl.hidden = threads.length === 0;
     const prev = SITES[(idx - 1 + N_SITES) % N_SITES], next = SITES[(idx + 1) % N_SITES];
-    prevBtn.textContent = '← ' + prev.where; prevBtn.setAttribute('aria-label', 'Previous stop: ' + prev.where);
-    nextBtn.textContent = next.where + ' →'; nextBtn.setAttribute('aria-label', 'Next stop: ' + next.where);
+    prevBtn.textContent = '← ' + prev.label; prevBtn.setAttribute('aria-label', 'Previous: ' + prev.name);
+    nextBtn.textContent = next.label + ' →'; nextBtn.setAttribute('aria-label', 'Next: ' + next.name);
     prevBtn.onclick = () => openSite(prev, { focus: true });
     nextBtn.onclick = () => openSite(next, { focus: true });
     panel.scrollTop = 0;
@@ -1193,13 +1123,8 @@
     const b = document.createElement('button');
     b.type = 'button';
     b.textContent = s.label;
-    const dot = document.createElement('span');
-    dot.className = 'dot';
-    dot.style.background = '#' + s.color.toString(16).padStart(6, '0');
-    b.prepend(dot);
     b.dataset.id = s.id;
-    b.title = s.where;
-    b.setAttribute('aria-label', 'Go to ' + s.where + ': ' + s.name);
+    b.setAttribute('aria-label', 'Show ' + s.name);
     b.addEventListener('click', () => openSite(s, { focus: true }));
     legend.appendChild(b);
   }
@@ -1248,7 +1173,7 @@
       if (announcedLeg !== walkLeg) {
         announcedLeg = walkLeg;
         const dest = SITES[route[walkLeg + 1]];
-        caption.textContent = 'Walking to ' + dest.where + ' · ' + dest.when;
+        caption.textContent = '';
         legendButtons().forEach(b => b.classList.toggle('touring', b.dataset.id === dest.id));
         revealLegend(dest.id);
       }
